@@ -1,0 +1,30 @@
+bkra			#back up the ra on the stack before putting the args on the stack so that GCD can get back to relPrime
+
+sput nVal		#put n on the stack
+			#if n is large, get it into the accumulator first
+				#aput upper(nVal)
+				#shfr 8
+				#lorr lower(nVal)
+				#bkac
+
+aput 2			#put 2 (i.e. mVal) in the accumulator
+bkac			#move 2 from the accumulator to the stack (could put directly on stack but this is more like setting up the var m and then using it, like in the C code)
+
+LOOP:
+	jump GCD	#go to the function in the other file
+
+	cequ 1		#checks if return value from GCD (which gets stored in the accumulator upon return) is 1 or not. It puts 1 in the comp reg if so, and puts 0 in the comp reg if not.
+	jcmp, END	#continue in the loop unless GCD returned 1
+			#which is to say, break out of the loop if GCD returned 1
+
+	spop		#if GCD didn't return 1, get m off the stack and into the accumulator
+	aadd 1		#add 1 to m
+	sput		#put the new m = mOld + 1 back on the stack so it is the arg for the next time we call GCD
+	jump LOOP	#do the loop again
+
+END:
+	spop		#get m into the accumulator because it is the return value
+	#pop until the addr on top of the stack is the address of relPrime's caller
+	rpop		#restore ra to the address of whatever called relPrime
+	jret		#jump to wherever called relPrime
+	
