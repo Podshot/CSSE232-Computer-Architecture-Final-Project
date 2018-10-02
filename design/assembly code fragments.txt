@@ -1,0 +1,90 @@
+Assembly Code Fragments
+
+
+Add
+
+    aput 0 2 # Put the value 2 into the "Mary" accumulator
+    aadd 0 5 # Add the immediate value 5 to "Mary"
+    # "Mary" result: 7
+	
+	aput 1 5 # Put the value 5 into "Shelley"
+	aadd 1   # Add the values of "Mary" and "Shelley"
+	# "Mary" result: 12, "Shelley" result: 5
+
+Subtract
+
+    aput 0 5 # Put the value 5 into the "Mary" accumulator
+    asub 0 2 # Subtract the immediate value 2 from "Mary"s value
+    # "Mary" result: 3
+	
+	aput 1 3 # Put the value 3 into "Mary"
+	asub 1   # Subtract "Shelley"s value from "Mary"see
+	# "Mary" result: 0, "Shelley" result: 3
+
+Basic Stack Functions
+
+    sput 0 7 	# Puts 7 onto the stack
+	spek 0   	# Put top value of the stack into the "Mary" accumulator
+    sput 0 10 	# Puts 10 onto the stack
+    spop        # Pops off the top value (10) and puts it into the "Mary" accumulator
+    spop        # Pops off the top value (7) and puts it into the "Mary" accumulator
+
+Putting a big immediate into the accumulator
+
+    aput 0 0b01111111 # Put upper half into "Mary"
+    shfl 0 8		  # Shift "Mary"s value left 8 bits
+    lorr 0 0b11111111 # Or the lower 8 bits into "Mary"
+    # result: 0b0111111111111111 = 32767
+
+Logical Operations
+
+    aput 0 10		# Put 10 into the "Mary" accumulator
+    lorr 0 0b10110  # Or the value in "Mary" with 10110, result in accumulator 0b00011
+	land 0 0b10110  # And the value in "Mary" with 10110, result: 0b00010
+	shfl 0 2		# Shift the value in "Mary" 2 bits left
+	shfr 0 1		# Shift the value in "Mary" 1 bit right
+	# result: 0b00100 = 4
+    
+Load from Memory
+
+    load 0 0x1001 	# Load the value at 0x1001 into "Mary"
+	aput 1 0x0		# Put the value 0 into "Shelley"
+	load 1			# Load the value into "Shelley" from the address already stored in "Shelley"
+
+Save to Memory
+
+	aput 0 2		# Set "Mary" to the value 2
+    stor 0 0x1011	# Store the value in "Mary" into address 0x1011
+
+Procedure to add 2 + 5
+
+    add:
+		spop     # Pops the top value off of the stack in the "Mary" accumulator (2)
+        swap     # Swaps which accumulator is currently being used
+        spop 	 # Pops the top value off of the stack (5)
+		aadd 1 0 # Adds both of the accumulators together and stores the result in the "Mary" accumulator
+        jret 	 # Jump back to ra
+
+    main:
+		bkra # Back up the return register to stack
+		bkac # Back up both of the accumulators to stack
+		sput 0 5
+		sput 0 2
+		jfnc add # Jump to add procedure, sets ra to pc  + 2
+		# When the procedure returns, the return value is in the "Mary" accumulator
+
+
+Sum numbers 1 - 10
+
+        aput 0 0  # Put 0 into the "Mary" accumulator (total)
+        aput 1 1  # Put 1 into the "Shelley" accumulator (i)
+    loop:
+        cgre 0 10   # Compare the "Shelley" accumulator to see if the value is greater than 10
+        jcmp 0 exit # Jump to exit if "Shelley"s value is greater than 10
+        swap		# Switch accumulator to "Mary"
+        aadd 1   	# Add both accumulators and store in "Mary"
+        swap 		# Switch back to "Shelley"
+        aadd 0 1 	# Increment "Shelley" accumulator by 1
+        jimm -12	# Jump 6 instructions up
+    exit:
+		....
