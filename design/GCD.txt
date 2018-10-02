@@ -1,0 +1,31 @@
+#n is a and is on the top of the stack
+#ra is right behind n
+#m is b and is in the backup accumulator
+
+spop			#get n into the main accumulator
+
+cequ 0 1		#put 1 in the comp reg if n is equal to 1
+swap			#get ready for the loop or return by putting m into the main accumulator
+jcmp 0 ENDm		#if 1 is in the comp reg (n == 1) then jump to the end where we return m
+
+LOOP:
+	cequ 0 0		#puts 1 into the comp reg if m is 0
+	jcmp 0 ENDswap		#if m is 0, the comp reg holds 1, so jump out of the loop and return a = n
+
+	cles 0 1		#if m (b, in main) is less than n (a, in backup) puts 1 into comp reg
+				#ie puts 1 into comp reg if a > b
+	jcmp 0 ELSE		#jump to the else clause if !(a > b) --> !(n > m)
+
+	swap			#if (a > b) --> (n > m), puts n into main accumulator so we can change its val
+	sub 1			#subtract the value of the backup accumulator from the value of the main accumulator and store the result in the main accumulator; leaves backup alone			
+				#our return value is a = n, so leave it there to be the return value
+	jimm 0 END		#jump to the end
+
+	ELSE:			#m is in the main accumulator, n in the backup
+		sub 1		#subtract the value of the backup accumulator from the value of the main accumulator and store the result in the main accumulator; leaves backup alone
+				#this is m = m - n --> b = b - a
+
+ENDswap:
+	swap		#n was in the backup; now it is in the main to be returned
+END:
+	jret		#jump to the addr in ra (ie a line in relPrime)
