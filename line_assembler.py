@@ -23,6 +23,7 @@ OP_CODES = {
     "stor": 0b10011,
     "bkac": 0b10100,
     "bkra": 0b10101,
+    "swap": 0b10110
 }
 
 FLAGS = {
@@ -34,6 +35,9 @@ FLAGS = {
 
 
 def inst_to_machine(parts: List[str]) -> str:
+    if parts[0] == "swap":
+        return f"0{OP_CODES[parts[0]]:05b}00000000"
+
     inst = OP_CODES[parts[0]]
     flag = FLAGS[parts[1]]
 
