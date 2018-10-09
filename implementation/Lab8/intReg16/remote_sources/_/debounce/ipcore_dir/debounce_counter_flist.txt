@@ -1,0 +1,16 @@
+# Output products list for <debounce_counter>
+core_resources.txt
+debounce_counter/doc/c_counter_binary_v11_0_readme.txt
+debounce_counter/doc/c_counter_binary_v11_0_vinfo.html
+debounce_counter/doc/ds215_counter.pdf
+debounce_counter.asy
+debounce_counter.gise
+debounce_counter.ngc
+debounce_counter.sym
+debounce_counter.v
+debounce_counter.veo
+debounce_counter.xco
+debounce_counter.xise
+debounce_counter_flist.txt
+debounce_counter_xmdf.tcl
+gui_latency.txt

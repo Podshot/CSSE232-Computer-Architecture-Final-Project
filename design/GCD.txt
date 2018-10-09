@@ -18,12 +18,13 @@ LOOP:
 
 	swap			#if (a > b) --> (n > m), puts n into main accumulator so we can change its val
 	sub 1			#subtract the value of the backup accumulator from the value of the main accumulator and store the result in the main accumulator; leaves backup alone			
-				#our return value is a = n, so leave it there to be the return value
-	jimm 0 END		#jump to the end
+	swap			#puts b back into the main accumulator so we can compare it with 0 at the beginning of the loop (we're about to go back to its top)
+	jimm 0 LOOP
 
 	ELSE:			#m is in the main accumulator, n in the backup
 		sub 1		#subtract the value of the backup accumulator from the value of the main accumulator and store the result in the main accumulator; leaves backup alone
 				#this is m = m - n --> b = b - a
+	jimm 0 LOOP
 
 ENDswap:
 	swap		#n was in the backup; now it is in the main to be returned
