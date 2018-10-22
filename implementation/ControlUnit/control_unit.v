@@ -42,6 +42,145 @@ module control_unit(
     output SrcB,
     output ALUOP
     );
+	 
+//////////////////////////////
+//      Initialization      //
+//////////////////////////////	
+
+	MemRead = 0;
+	MemWrite = 0; 
+	MemSrc = 0; 
+	RegWrite = 0; 
+	MaryWrite = 0; 
+	ShelleyWrite = 0; 
+	CompWrite = 0; 
+	RAWrite = 0; 
+	PCWrite = 0; 
+	SPWrite = 0; 
+	MarySrc = 0; 
+	ShelleySrc = 0;
+	RASrc = 0; 
+	PCSrc = 0; 
+	SPSrc = 0; 
+	RegDst = 0; 
+	RegData = 0; 
+	SrcA = 0; 
+	SrcB = 0; 
+	ALUOP = 0; 
+	#100; 
+
+//////////////////////////////
+//      Input/Output        //
+//////////////////////////////
+
+
+	
+
+//////////////////////////////
+//     STACK OPERATIONS     //
+//////////////////////////////
+
+//CASE 1: APUT
+
+//CASE 2: APUT@
+
+//CASE 3: SPUT
+
+//CASE 8: SPEK 
+
+//CASE 9: SPOP
+
+//CASE 10: RPOP
+
+//CASE 36: BKAC
+
+//CASE 37: BKAC@
+
+//CASE 38: BKRA
+
+//////////////////////////////
+//  ARITHMETIC OPERATIONS   //
+//////////////////////////////
+//CASE 4: AADD
+
+//CASE 5: AADD@
+
+//CASE 6: ASUB
+
+//CASE 7: ASUB@
+
+//////////////////////////////
+//      JUMP OPERATIONS     //
+//////////////////////////////
+
+//CASE 11: JIMM
+
+//CASE 12: JIMM@
+
+//CASE 13: JACC 
+
+//CASE 14: JACC@
+
+//CASE 15: JCMP
+
+//CASE 16: JCMP@
+
+//CASE 17: JRET 
+
+//CASE 18: JFNC
+
+//CASE 19: JFNC@
+
+//////////////////////////////
+//    LOGICAL OPERATIONS    //
+//////////////////////////////
+
+//CASE 26: LORR 
+
+//CASE 27: LORR@
+
+//CASE 28: LAND 
+
+//CASE 29: LAND@
+
+//CASE 30: SHFL
+
+//CASE 31: SHFL@
+
+//////////////////////////////
+//  COMPARISON OPERATIONS   //
+//////////////////////////////
+
+//CASE 20: CEQU
+
+//CASE 21: CEQU@
+
+//CASE 22: CLES 
+
+//CASE 23: CLES@
+
+//CASE 24: CGRE
+
+//CASE 25: CGRE@	 
+
+//////////////////////////////
+//  LOAD/STORE OPERATIONS   //
+//////////////////////////////
+
+//CASE 32: LOAD 
+
+//CASE 33: LOAD@
+
+//CASE 34: STOR
+
+//CASE 35: STOR@
+
+
+//////////////////////////////
+//      SWAP OPERATIONS     //
+//////////////////////////////
+
+//CASE 39: SWAP
 
 
 endmodule
