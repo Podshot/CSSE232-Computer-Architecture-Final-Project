@@ -1,22 +1,16 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    13:35:11 10/20/2018 
-// Design Name: 
-// Module Name:    control_unit 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
+// School: Rose-Hulman Institute of Technology
+// Class: CSSE 232 Computer Architecture I 
+// Term: Fall Quarter, 2018-2019 
+// Professor: Sid Stamm 
+// Team: 3V
+// Members: Maura Coriale, Ben Gothard, Matthew Lyonns, Joy Stockwell 
+// Project: CPU Design Project
+// Project Name: "Frankie" 
+// Author: Maura Coriale 
+// Component: Control Unit  
+// Description: Main control unit for the "Frankie" CPU. 
 //////////////////////////////////////////////////////////////////////////////////
 module control_unit(
     input [4:0] OPCODE,
@@ -32,7 +26,7 @@ module control_unit(
     output reg PCWrite,
     output reg SPWrite,
     output reg [1:0] MarySrc,
-    output reg ShelleySrc,
+    output reg [1:0] ShelleySrc,
     output reg RASrc,
     output reg [2:0] PCSrc,
     output reg [1:0] SPSrc,
@@ -293,37 +287,99 @@ module control_unit(
 			ALUOP = 3'b000;
 			CompWrite = 1'b1; 
 		end
+
 //CASE 30: SHFL
+	//?????????????????????
 
 //CASE 31: SHFL@
+	//?????????????????????
+
 
 //////////////////////////////
 //  COMPARISON OPERATIONS   //
 //////////////////////////////
 
 //CASE 20: CEQU
+		if(OPCODE == 5'b01100 && flagbit == 0) begin
+			SrcA = 1'b0; 
+			SrcB = 2'b01; 
+			ALUOP = 3'b110; 
+			CompWrite = 1'b1; 
+		end
 
 //CASE 21: CEQU@
+		if(OPCODE == 5'b01100 && flagbit == 1) begin
+			SrcA = 1'b0; 
+			SrcB = 2'b00; 
+			ALUOP = 3'b110; 
+			CompWrite = 1'b1; 
+		end
 
 //CASE 22: CLES 
+		if(OPCODE == 5'b01101 && flagbit == 0) begin
+			SrcA = 1'b0;
+			SrcB = 2'b01; 
+			ALUOP = 3'b100;
+			CompWrite = 1'b1; 
+		end
 
 //CASE 23: CLES@
+		if(OPCODE == 5'b01101 && flagbit == 1) begin
+			SrcA = 1'b0;
+			SrcB = 2'b00; 
+			ALUOP = 3'b100;
+			CompWrite = 1'b1; 
+		end
 
 //CASE 24: CGRE
+		if(OPCODE == 5'b01110 && flagbit == 0) begin
+			SrcA = 1'b0;
+			SrcB = 2'b01; 
+			ALUOP = 3'b101; 
+			CompWrite = 1'b1; 
+		end
 
 //CASE 25: CGRE@	 
+		if(OPCODE == 5'b01110 && flagbit == 1) begin
+			SrcA = 1'b0;
+			SrcB = 2'b00; 
+			ALUOP = 3'b101; 
+			CompWrite = 1'b1; 
+		end
 
 //////////////////////////////
 //  LOAD/STORE OPERATIONS   //
 //////////////////////////////
 
 //CASE 32: LOAD 
+		if(OPCODE == 5'b10011 && flagbit == 0) begin
+			MemWrite = 1'b0;
+			MemDst = 3'b001;
+			MaryWrite = 1'b1; 
+			MarySrc = 2'b00; 
+		end
 
 //CASE 33: LOAD@
+		if(OPCODE == 5'b10011 && flagbit == 1) begin
+			MemWrite = 1'b0;
+			MemDst = 3'b011;
+			MaryWrite = 1'b1; 
+			MarySrc = 2'b00; 
+		end
 
 //CASE 34: STOR
-
+		if(OPCODE == 5'b10100 && flagbit == 0) begin
+			MemWrite = 1'b1;
+			MemDst = 3'b001;
+			MarySrc = 2'b00; 
+		end
+		
 //CASE 35: STOR@
+		if(OPCODE == 5'b10100 && flagbit == 1) begin
+			MemWrite = 1'b1;
+			MemDst = 3'b011;
+			MarySrc = 2'b00; 
+		end
 
 
 //////////////////////////////
@@ -331,6 +387,15 @@ module control_unit(
 //////////////////////////////
 
 //CASE 39: SWAP
+		if(OPCODE == 5'b10111) begin
+			MaryWrite = 1'b1; 
+			MarySrc = 2'b10; 
+			ShelleyWrite = 1'b1; 
+			ShelleySrc = 2'b10;
+		end
 
+			
 	end
+		
+		
 endmodule

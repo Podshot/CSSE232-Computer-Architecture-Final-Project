@@ -42,7 +42,7 @@ module contro_unit_test;
 	wire PCWrite;
 	wire SPWrite;
 	wire [1:0] MarySrc;
-	wire ShelleySrc;
+	wire [1:0] ShelleySrc;
 	wire RASrc;
 	wire [2:0] PCSrc;
 	wire [1:0] SPSrc;
@@ -341,8 +341,123 @@ module contro_unit_test;
 		else 
 			$display("Testing LAND Failed"); 
 			
+		//Testing Comparisons
+		$display("******************************");
+		$display("Tests for Comparison Operations:");
+		$display("******************************");
+		
+		//Testing CEQU
+		flagbit = 0; 
+		OPCODE = 5'b01100;
+		#100; 
+		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 3'b110 && CompWrite == 1'b1) 
+			$display("Testing CEQU Passed");
+		else 
+			$display("Testing CEQU Failed"); 
+		
+		//Testing CEQU@
+		flagbit = 1; 
+		OPCODE = 5'b01100;
+		#100; 
+		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 3'b110 && CompWrite == 1'b1) 
+			$display("Testing CEQU@ Passed");
+		else 
+			$display("Testing CEQU@ Failed"); 
+		
+		//Testing CLES 
+		flagbit = 0;
+		OPCODE = 5'b01101;
+		#100; 
+		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 3'b100 && CompWrite == 1'b1)
+			$display("Testing CLES Passed");
+		else 
+			$display("Testing CLES Failed"); 
+		
+		//Testing CLES@
+		flagbit = 1;
+		OPCODE = 5'b01101;
+		#100; 
+		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 3'b100 && CompWrite == 1'b1)
+			$display("Testing CLES Passed");
+		else 
+			$display("Testing CLES Failed"); 	
 
+		//Testing CGRE
+		flagbit = 0; 
+		OPCODE = 5'b01110;
+		#100; 
+		if(SrcA == 1'b0 && SrcB == 2'b01 &&  ALUOP == 3'b101 && CompWrite == 1'b1)
+			$display("Testing CGRE Passed");
+		else 
+			$display("Testing CGRE Failed"); 
+			
+		//Testing CGRE@ 
+		flagbit = 1; 
+		OPCODE = 5'b01110; 
+		#100;
+		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 3'b101 && CompWrite == 1'b1)
+			$display("Testing CGRE@ Passed");
+		else 
+			$display("Testing CGRE@ Failed");
+		
+		
+		//Testing Load/Store
+		$display("******************************");
+		$display("Tests for Load/Store Operations:");
+		$display("******************************");		
+		
+		//Testing LOAD
+		flagbit = 0; 
+		OPCODE = 5'b10011;
+		#100; 
+		if(MemWrite == 1'b0 && MemDst == 3'b001 && MaryWrite == 1'b1 && MarySrc == 2'b00)
+			$display("Testing LOAD Passed");
+		else
+			$display("Testing LOAD Failed");
+			
 
+		//Testing LOAD@
+		flagbit = 1; 
+		OPCODE = 5'b10011;
+		#100; 
+		if(MemWrite == 1'b0 && MemDst == 3'b011 && MaryWrite == 1'b1 && MarySrc == 2'b00)
+			$display("Testing LOAD@ Passed");
+		else 
+			$display("Testing LOAD@ Failed"); 
+				
+		//Testing STOR
+		flagbit = 0;
+		OPCODE = 5'b10100;
+		#100;
+		if(MemWrite == 1'b1 && MemDst == 3'b001 && MarySrc == 2'b00)
+			$display("Testing STOR Passed");
+		else
+			$display("Testing STOR Failed");
+		
+		//Testing STOR@
+		flagbit = 1; 
+		OPCODE = 5'b10100;
+		#100;
+		if(MemWrite == 1'b1 && MemDst == 3'b011 && MarySrc == 2'b00) 
+			$display("Testing STOR@ Passed");
+		else 
+			$display("Testing STOR@ Failed");
+			
+		
+		//Testing Swap
+		$display("******************************");
+		$display("Test for Swap Operation");
+		$display("******************************");
+		
+		//Testing SWAP
+		flagbit = 0; 
+		OPCODE = 5'b10111; 
+		#100; 
+		if(MaryWrite == 1'b1 && MarySrc == 2'b10 && ShelleyWrite == 1'b1 && ShelleySrc == 2'b10) 
+			$display("Testing SWAP Passed");
+		else
+			$display("Testing SWAP Failed"); 
+			
 		end
 		 
 		
