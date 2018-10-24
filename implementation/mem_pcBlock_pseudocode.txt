@@ -1,0 +1,22 @@
+/***
+initialize all
+***/
+
+//load 0x0 (addr of first line of kernel) into PC
+immAddr = 0x0;
+pcSrc = 010;
+//get mem[pc] into inst
+InstWrite = 1;
+memDst = 0;
+#100;
+//inst should now contain the first line in the kernel
+
+//increment pc by 2
+pcSrc = 000;
+#100;
+//inst should now contain second line in kernel
+
+//go back to 0x0 and check you have the first line of kernel again
+pcSrc = 001;
+imm = -2; //not sure if I have an off-by-one error
+#100;
