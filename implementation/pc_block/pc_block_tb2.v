@@ -4,9 +4,9 @@
 // Company: 
 // Engineer:
 //
-// Create Date:   16:58:31 10/21/2018
+// Create Date:   20:01:48 10/23/2018
 // Design Name:   pc_block
-// Module Name:   C:/Users/stockwja/Documents/Classes/CSSE232/1819a-csse232-02-3V/implementation/pc_block/pc_block_tb.v
+// Module Name:   C:/Users/stockwja/Documents/Classes/CSSE232/1819a-csse232-02-3V/implementation/pc_block/pc_block_tb2.v
 // Project Name:  pc_block
 // Target Device:  
 // Tool versions:  
@@ -22,13 +22,18 @@
 // 
 ////////////////////////////////////////////////////////////////////////////////
 
-module pc_block_tb;
+module pc_block_tb2;
 
 	// Inputs
 	reg clock;
-	reg pcSrc;
-	reg [15:0] nextInst;
-	reg [15:0] jump;
+	reg [3:0]  pcSrc;
+	reg [15:0] immPlusPC;
+	reg [15:0] immAddr;
+	reg [15:0] ra;
+	reg [15:0] mary;
+	reg [15:0] pcPlusMary;
+	reg [15:0] jcmpImm;
+	reg [15:0] jcmpImmLS;
 	reg pcWrite;
 
 	// Outputs
@@ -38,8 +43,13 @@ module pc_block_tb;
 	pc_block uut (
 		.clock(clock), 
 		.pcSrc(pcSrc), 
-		.nextInst(nextInst), 
-		.jump(jump), 
+		.immPlusPC(immPlusPC), 
+		.immAddr(immAddr), 
+		.ra(ra), 
+		.mary(mary), 
+		.pcPlusMary(pcPlusMary), 
+		.jcmpImm(jcmpImm), 
+		.jcmpImmLS(jcmpImmLS), 
 		.pcWrite(pcWrite), 
 		.pcCur(pcCur)
 	);
@@ -59,32 +69,34 @@ module pc_block_tb;
 				#(PERIOD*DUTY_CYCLE);
 				end
 		end
-		
+
 	initial begin
 		// Initialize Inputs
 		clock = 0;
 		pcSrc = 0;
-		nextInst = 0;
-		jump = 0;
+		immPlusPC = 0;
+		immAddr = 0;
+		ra = 0;
+		mary = 0;
+		pcPlusMary = 0;
+		jcmpImm = 0;
+		jcmpImmLS = 0;
 		pcWrite = 0;
 
 		// Wait 100 ns for global reset to finish
 		#100;
-        
-		// Add stimulus here
-		// After 100 ns, pcCur is 42
-		nextInst = 42;
+    
+		pcSrc = 2;
+		#100
+		// Writes 0 to pc
 		pcWrite = 1;
-		
+		#100
+		// Writes 42 to pc 100 ns later
+		immAddr = 42;
 		#100;
-		
-		jump = 24;
-		pcSrc = 1;
-		//pcWrite already 1
-		
+		pcSrc = 0;
 		#100;
-		
-		
+		// Writes 42 + 2 = 44 to pc; keeps going, incrementing by 2 each time the clock cycles
 
 	end
       

@@ -20,14 +20,20 @@
 //////////////////////////////////////////////////////////////////////////////////
 module pc_block(
 	input clock,
-	input pcSrc,
-	input[15:0] nextInst,
-	input[15:0] jump,
+	input [3:0] pcSrc,
+	input[15:0] immPlusPC,
+	input[15:0] immAddr,
+	input[15:0] ra,
+	input[15:0] mary,
+	input[15:0] pcPlusMary,
+	input[15:0] jcmpImm,
+	input[15:0] jcmpImmLS,
 	input pcWrite,
-	output[15:0] pcCur
+	output wire [15:0] pcCur
 	);
 	
 	reg[15:0] muxOut; //takes either nextInst or jump to pc
+	wire[15:0] pcNext; //the wire that leads away from the adder
 	
 	register_component pc (
 		.in(muxOut),
@@ -35,13 +41,20 @@ module pc_block(
 		.write(pcWrite),
 		.out(pcCur)
 	);
-
+ 
 	always @(posedge clock)
 	begin
 		case( pcSrc )
-			 0 : muxOut = nextInst;
-			 1 : muxOut = jump;
+			 3'b000 : muxOut = pcCur + 2;
+			 3'b001 : muxOut = immPlusPC;
+			 3'b010 : muxOut = immAddr;
+			 3'b011 : muxOut = ra;
+			 3'b100 : muxOut = mary;
+			 3'b101 : muxOut = pcPlusMary;
+			 3'b110 : muxOut = jcmpImm;
+			 3'b111 : muxOut = jcmpImmLS;
 		endcase
 	end
+	
 
 endmodule

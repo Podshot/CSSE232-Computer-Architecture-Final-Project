@@ -22,11 +22,18 @@ module register_component(
     input [15:0] in,
     input clock,
     input write,
-    output reg [15:0] out
+    output wire [15:0] out
     );
 	 
+	 reg [15:0] internal;
 	 always @(posedge clock)
+	 begin
 		if (write)
-			out <= in;
+		begin
+			assign internal = in;
+		end
+	end
+	assign out = internal;
+	 
 
 endmodule
