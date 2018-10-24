@@ -1,0 +1,68 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
+////////////////////////////////////////////////////////////////////////////////
+//   ____  ____ 
+//  /   /\/   / 
+// /___/  \  /    Vendor: Xilinx 
+// \   \   \/     Version : 14.7
+//  \   \         Application : sch2hdl
+//  /   /         Filename : ConnectedComponents.vf
+// /___/   /\     Timestamp : 10/23/2018 15:55:21
+// \   \  /  \ 
+//  \___\/\___\ 
+//
+//Command: sch2hdl -sympath "C:/Users/corialmt/Documents/Sophomore Year/Fall Quarter/CompArch/lab07/memory/ipcore_dir" -intstyle ise -family spartan3e -verilog "C:/Users/corialmt/Documents/Sophomore Year/Fall Quarter/CompArch/lab07/memory/ConnectedComponents.vf" -w "C:/Users/corialmt/Documents/Sophomore Year/Fall Quarter/CompArch/lab07/memory/ConnectedComponents.sch"
+//Design Name: ConnectedComponents
+//Device: spartan3e
+//Purpose:
+//    This verilog netlist is translated from an ECS schematic.It can be 
+//    synthesized and simulated, but it should not be modified. 
+//
+`timescale 1ns / 1ps
+
+module ConnectedComponents(addra, 
+                           CLK, 
+                           clka, 
+                           dina, 
+                           Reset, 
+                           wea, 
+                           ALUSrc, 
+                           Branch, 
+                           MemRead, 
+                           MemtoReg, 
+                           MemWrite, 
+                           RegDst, 
+                           RegWrite);
+
+    input [9:0] addra;
+    input CLK;
+    input clka;
+    input [15:0] dina;
+    input Reset;
+    input [0:0] wea;
+   output ALUSrc;
+   output Branch;
+   output MemRead;
+   output MemtoReg;
+   output MemWrite;
+   output RegDst;
+   output RegWrite;
+   
+   wire [15:0] douta;
+   
+   blockmemory16kx1  XLXI_1 (.addra(addra[9:0]), 
+                            .clka(clka), 
+                            .dina(dina[15:0]), 
+                            .wea(wea[0]), 
+                            .douta(douta[15:0]));
+   MIPS_control_unit  XLXI_2 (.CLK(CLK), 
+                             .Opcode(douta[5:0]), 
+                             .Reset(Reset), 
+                             .ALUSrc(ALUSrc), 
+                             .Branch(Branch), 
+                             .MemRead(MemRead), 
+                             .MemtoReg(MemtoReg), 
+                             .MemWrite(MemWrite), 
+                             .RegDst(RegDst), 
+                             .RegWrite(RegWrite));
+endmodule
