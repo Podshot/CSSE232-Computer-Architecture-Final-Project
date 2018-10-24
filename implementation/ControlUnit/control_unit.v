@@ -23,8 +23,8 @@ module control_unit(
     input flagbit,
     output reg MemRead,
     output reg MemWrite,
-    output reg MemSrc,
-    output reg RegWrite ,
+    output reg [2:0] MemSrc,
+    output reg RegWrite,
     output reg MaryWrite,
     output reg ShelleyWrite,
     output reg CompWrite,
@@ -35,8 +35,9 @@ module control_unit(
     output reg ShelleySrc,
     output reg RASrc,
     output reg PCSrc,
-    output reg SPSrc,
+    output reg [1:0] SPSrc,
     output reg RegDst,
+	 output reg [2:0] MemDst,
     output reg RegData,
     output reg SrcA,
     output reg SrcB,
@@ -63,6 +64,7 @@ module control_unit(
 		PCSrc = 0; 
 		SPSrc = 0; 
 		RegDst = 0; 
+		MemDst = 0;
 		RegData = 0; 
 		SrcA = 0; 
 		SrcB = 0; 
@@ -92,14 +94,49 @@ module control_unit(
 		end
 
 //CASE 3: SPUT
+		if(OPCODE == 5'b00001) begin
+			MemSrc = 3'b100; 
+			SPWrite = 1'b1;
+			SPSrc = 2'b01;
+			MemWrite = 1'b1; 
+		end 
 
 //CASE 8: SPEK 
-
+		if(OPCODE == 5'b00100) begin
+			MemWrite = 1'b0; 
+			MemSrc = 3'b101; 
+			MaryWrite = 1'b1;
+			MarySrc = 2'b00;
+		end
+	
 //CASE 9: SPOP
+		if(OPCODE == 5'b00101) begin
+			MemWrite = 1'b0; 
+			MemSrc = 3'b100; 
+			SPWrite = 1'b1; 
+			SPSrc = 2'b10; 
+			MaryWrite = 1'b1; 
+			MarySrc = 2'b00; 
+		end 
 
 //CASE 10: RPOP
+		if(OPCODE == 5'b00110) begin
+			MemWrite = 1'b0; 
+			MemSrc = 3'b100;
+			SPWrite = 1'b1; 
+			SPSrc = 2'b10;
+			RAWrite = 1'b1; 
+			RASrc = 1'b0; 
+		end
 
-//CASE 36: BKAC
+//CASE 36: BKAC 
+		if(OPCODE == 5'b10101) begin
+			SPWrite = 1'b1;
+			SPSrc = 2'b01; 
+			MemWrite = 1'b1; 
+			MemDst = 3'b100; 
+			MemSrc = 2'b00; 
+		end 
 
 //CASE 37: BKAC@
 
