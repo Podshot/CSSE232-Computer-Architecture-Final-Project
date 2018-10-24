@@ -1,0 +1,19 @@
+/***
+initialize
+***/
+
+//SP should start out as 0...not sure if we're supposed to put this in our module somewhere or just rely on the default initialization that sets everything to 0...can it do this for a value inside of a module??
+SPSrc = 00;
+InstWrite = 1;
+MemWrite = 1;
+#100;
+//Inst should now contain the first line of the kernel
+
+SPSrc = 10;
+#100
+//Inst should now contain the second line of the kernel
+//What happens if we go backward from 0? Do we have a way to handle this?
+
+SPSrc = 01;
+#100
+//Inst should contain the first line again.
