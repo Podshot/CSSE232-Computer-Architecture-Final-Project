@@ -44,14 +44,14 @@ module contro_unit_test;
 	wire [1:0] MarySrc;
 	wire ShelleySrc;
 	wire RASrc;
-	wire PCSrc;
+	wire [2:0] PCSrc;
 	wire [1:0] SPSrc;
 	wire RegDst;
 	wire [2:0] MemDst;
 	wire RegData;
 	wire SrcA;
 	wire SrcB;
-	wire ALUOP;
+	wire [2:0] ALUOP;
 
 	// Instantiate the Unit Under Test (UUT)
 	control_unit uut (
@@ -90,7 +90,14 @@ module contro_unit_test;
         
 		// Add stimulus here
 		// Add stimulus here
-		//Testing APUT: 
+
+		//Testing Stack Operations:
+		
+		$display("******************************");
+		$display("Tests for Stack Operations");
+		$display("******************************");
+		
+		//Testing APUT
 		OPCODE = 0; 
 		flagbit = 0; 
 		#100; 
@@ -126,7 +133,7 @@ module contro_unit_test;
 		OPCODE = 5'b00100; 
 		#100; 
 		
-		if(MemWrite == 1'b0 && MemSrc == 3'b101 && MaryWrite == 1'b1 && MarySrc == 2'b00) 
+		if(MemWrite == 1'b0 && MemDst == 3'b101 && MaryWrite == 1'b1 && MarySrc == 2'b00) 
 			$display("Testing SPEK Passed");
 		else
 			$display("Testing SPEK Failed");
@@ -136,7 +143,7 @@ module contro_unit_test;
 		OPCODE = 5'b00101;
 		#100;
 		
-		if(MemWrite == 1'b0 && MemSrc == 3'b100 && SPWrite == 1'b1 && SPSrc == 2'b10 && MaryWrite == 1'b1 && MarySrc == 2'b00) 
+		if(MemWrite == 1'b0 && MemDst == 3'b100 && SPWrite == 1'b1 && SPSrc == 2'b10 && MaryWrite == 1'b1 && MarySrc == 2'b00) 
 			$display("Testing SPOP Passed");
 		else 
 			$display("Testing SPOP Failed"); 
@@ -146,7 +153,7 @@ module contro_unit_test;
 		OPCODE = 5'b00110; 
 		#100;
 		
-		if(MemWrite == 1'b0 && MemSrc == 3'b100 && SPWrite == 1'b1 && SPSrc == 2'b10 && RAWrite == 1'b1 && RASrc == 1'b0)
+		if(MemWrite == 1'b0 && MemDst == 3'b100 && SPWrite == 1'b1 && SPSrc == 2'b10 && RAWrite == 1'b1 && RASrc == 1'b0)
 			$display("Testing RPOP Passed");
 		else 
 			$display("Testing RPOP Failed");
@@ -160,7 +167,184 @@ module contro_unit_test;
 			$display("Testing BKAC Passed");
 		else 
 			$display("Testing BKAC Failed"); 
+			
+		//Testing BKAC@
+		flagbit = 1;
+		OPCODE = 5'b10101;
+		#100; 
+		
+		if(SPWrite == 1'b1 && SPSrc == 2'b01 && MemWrite == 1'b1 && MemSrc == 2'b01) 
+			$display("Testing BKAC@ Passed");
+		else 
+			$display("Testing BKAC@ Failed"); 
+			
+		//Testing BKRA
+		flagbit = 0;
+		OPCODE = 5'b10110;
+		#100; 
+		
+		if(SPWrite == 1'b1 && SPSrc == 2'b01 && MemWrite == 1'b1 && MemSrc == 2'b10) 
+			$display("Testing BKRA Passed");
+		else 
+			$display("Testing BKRA Failed"); 
+		
+		
+		//Testing Arithmetic and Logic 
+		$display("******************************");
+		$display("Tests for Arithmetic:");
+		$display("******************************");
+		
+		//Testing AADD
+		flagbit = 0; 
+		OPCODE = 5'b00010;
+		#100;  
+		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 3'b010 && MaryWrite == 1'b1 && MarySrc == 2'b01)
+			$display("Testing AADD Passed");
+		else
+			$display("Testing AADD Failed"); 
+			
+		//Testing AADD@
+		flagbit = 1; 
+		OPCODE = 5'b00010;
+		#100; 
+		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 3'b010 && MaryWrite == 1'b1 && MarySrc == 2'b01)
+			$display("Testing AADD@ Passed");
+		else
+			$display("Testing AADD@ Failed"); 
+	
+	//Testing ASUB
+		flagbit = 0; 
+		OPCODE = 5'b00011;
+		#100;  
+		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 3'b011 && MaryWrite == 1'b1 && MarySrc == 2'b01)
+			$display("Testing ASUB Passed");
+		else
+			$display("Testing ASUB Failed"); 
+			
+		//Testing ASUB@
+		flagbit = 1; 
+		OPCODE = 5'b00011;
+		#100; 
+		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 3'b011 && MaryWrite == 1'b1 && MarySrc == 2'b01)
+			$display("Testing ASUB@ Passed");
+		else
+			$display("Testing ASUB@ Failed"); 
+		
 
-	end
+		
+		$display("******************************");
+		$display("Tests for Jump Operations:");
+		$display("******************************");
+
+		//Testing JIMM
+		flagbit = 0; 
+		OPCODE = 5'b00111;
+		#100; 
+		if(PCWrite == 1'b1 && PCSrc == 2'b10)
+			$display("Testing JIMM Passed");
+		else 
+			$display("Testing JIMM Failed");
+		
+		//Testing JIMM@
+		flagbit = 1; 
+		OPCODE = 5'b00111; 
+		#100; 
+		if(PCWrite == 1'b1 && PCSrc == 2'b01 )
+			$display("Testing JIMM@ Passed");
+		else 
+			$display("Testing JIMM@ Failed");		
+		
+		//Testing JACC
+		flagbit = 0; 
+		OPCODE = 5'b01000;
+		#100; 
+		if(PCWrite == 1'b1 && PCSrc == 3'b100)
+			$display("Testing JACC Passed");
+		else 
+			$display("Testing JACC Failed");
+		
+		//Testing JACC@
+		flagbit = 1; 
+		OPCODE = 5'b01000; 
+		#100; 
+		if(PCWrite == 1'b1 && PCSrc == 3'b101 )
+			$display("Testing JACC@ Passed");
+		else 
+			$display("Testing JACC@ Failed");
+		
+		//Testing JCMP
+		flagbit = 0; 
+		OPCODE = 5'b01001;
+		#100; 
+		if(PCWrite == 1'b1 && PCSrc == 3'b110)
+			$display("Testing JCMP Passed");
+		else 
+			$display("Testing JCMP Failed");
+		
+		//Testing JCMP@
+		flagbit = 1; 
+		OPCODE = 5'b01001; 
+		#100; 
+		if(PCWrite == 1'b1 && PCSrc == 3'b111 )
+			$display("Testing JCMP@ Passed");
+		else 
+			$display("Testing JCMP@ Failed"); 
+		
+		//Testing JFNC
+		flagbit = 0;
+		OPCODE = 5'b01011;
+		#100;
+		if(RAWrite == 1'b1 && RASrc == 1'b1 && PCWrite == 1'b1 && PCSrc == 3'b010)
+			$display("Testing JFNC Passed");
+		else
+			$display("Testing JFNC Failed"); 
+		
+		//Testing JFNC@
+		flagbit = 1;
+		OPCODE = 5'b01011;
+		#100;
+		if(RAWrite == 1'b1 && RASrc == 1'b1 && PCWrite == 1'b1 && PCSrc == 3'b001)
+			$display("Testing JFNC@ Passed");
+		else
+			$display("Testing JFNC@ Failed"); 
+			
+		
+		$display("******************************");
+		$display("Tests for Logical Operations:");
+		$display("******************************");
+		
+		//Testing LORR
+		flagbit = 0;
+		OPCODE = 5'b01111;
+		#100; 
+		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 3'b001 && CompWrite == 1'b1)
+			$display("Testing LORR Passed");
+		else 
+			$display("Testing LORR Failed"); 
+			
+		//Testing LORR@
+		flagbit = 1;
+		OPCODE = 5'b01111;
+		#100; 
+		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 3'b001 && CompWrite == 1'b1)
+			$display("Testing LORR@ Passed");
+		else 
+			$display("Testing LORR@ Failed"); 
+		
+		
+		//Testing LAND
+		flagbit = 0; 
+		OPCODE = 5'b10000;
+		#100; 
+		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 3'b000 && CompWrite == 1'b1) 
+			$display("Testing LAND Passed");
+		else 
+			$display("Testing LAND Failed"); 
+			
+
+
+		end
+		 
+		
       
 endmodule
