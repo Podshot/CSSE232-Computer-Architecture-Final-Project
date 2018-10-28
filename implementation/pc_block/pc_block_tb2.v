@@ -85,18 +85,43 @@ module pc_block_tb2;
 
 		// Wait 100 ns for global reset to finish
 		#100;
-    
+		//no writing to pc for first 200 ns
 		pcSrc = 2;
 		#100
-		// Writes 0 to pc
+		// 200 to 300 ns: pc should be 0
+		//load in immAddr of 0
 		pcWrite = 1;
 		#100
-		// Writes 42 to pc 100 ns later
-		immAddr = 42;
+		// 300 to 400 ns: pc should be 2
+		immPlusPC = 1;
+		immAddr = 2;
+		ra = 3;
+		mary = 4;
+		pcPlusMary = 5;
+		jcmpImm = 6;
+		jcmpImmLS= 7;
 		#100;
+		// 400 to 500 ns: pc should increment by 2 every 20 ns, ending at 12
 		pcSrc = 0;
 		#100;
-		// Writes 42 + 2 = 44 to pc; keeps going, incrementing by 2 each time the clock cycles
+		// 500 to 600 ns: pc should be 1
+		pcSrc = 1;
+		#100;
+		// 600 to 700 ns: pc should be 3
+		pcSrc = 3;
+		#100;
+		// 700 to 800 ns: pc should be 4
+		pcSrc = 4;
+		#100;
+		// 800 to 900 ns: pc should be 5
+		pcSrc = 5;
+		#100;
+		// 900 to 1000 ns: pc should be 6
+		pcSrc = 6;
+		#100;
+		// 1000 to 1100 ns: pc should be 7
+		pcSrc = 7;
+		#100;
 
 	end
       

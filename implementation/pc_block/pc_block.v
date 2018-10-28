@@ -44,7 +44,9 @@ module pc_block(
  
 	always @(posedge clock)
 	begin
+	//switch case acts as mux
 		case( pcSrc )
+	 //adder is just + in verilog
 			 3'b000 : muxOut = pcCur + 2;
 			 3'b001 : muxOut = immPlusPC;
 			 3'b010 : muxOut = immAddr;
