@@ -36,7 +36,7 @@ module memory_datapath(
     input RAWrite,
     input [1:0] MarySrc,
     input [1:0] ShelleySrc,
-    output wire [15:0] mem_out
+    output [15:0] mem_out
     );
 	 
 	 reg [15:0] mux_to_mem_addr;
@@ -51,7 +51,7 @@ module memory_datapath(
 		.DataIn(mux_to_mem_data),
 		.MemWrite(MemWrite),
 		.clock(clock),
-		.MemVal(mem_val)
+		.MemVal(mem_out)
 	 );
 	 
 	 sign_extender s_extenger (
@@ -101,7 +101,7 @@ module memory_datapath(
 		end
 	 end
 	 
-	 assign mem_out = mem_val;
+	 //assign mem_out = mem_val;
 	 
 
 
