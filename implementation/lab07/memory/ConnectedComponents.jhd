@@ -1,0 +1,5 @@
+MODULE ConnectedComponents
+	SUBMODULE blockmemory16kx1
+		INSTANCE XLXI_1
+	SUBMODULE MIPS_control_unit
+		INSTANCE XLXI_2
