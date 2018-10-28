@@ -3,10 +3,11 @@
 module memory(
 	input [15:0] Address, DataIn,
 	input MemWrite, clock,
-	output reg [15:0] MemVal
+	output [15:0] MemVal
 	);
 	
 	reg [15:0] main_memory [4096:0];
+	reg [15:0] internal_mem_val;
 	
 	
 	always @ (posedge clock)
@@ -14,7 +15,9 @@ module memory(
 		if (MemWrite == 1'b1)
 			main_memory[Address] = DataIn;
 		else
-			MemVal = main_memory[Address];
+			internal_mem_val = main_memory[Address];
 	end
+	
+	assign MemVal = internal_mem_val;
 
 endmodule
