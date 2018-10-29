@@ -113,6 +113,7 @@ module memory_datapath_tb;
 		MaryData = 127;
 		reg_in = 16'b0000000000000000;
 		#100;
+		MemWrite = 0;
 
 	end
       

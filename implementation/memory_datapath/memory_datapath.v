@@ -100,9 +100,4 @@ module memory_datapath(
 			endcase
 		end
 	 end
-	 
-	 //assign mem_out = mem_val;
-	 
-
-
 endmodule
