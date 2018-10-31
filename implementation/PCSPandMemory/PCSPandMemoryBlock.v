@@ -16,7 +16,14 @@ module PCSPandMemoryBlock(
 	 input PCWrite,
 	 input SPWrite,
 	 input InstWrite,
-	 input reset,
+	 // Joy added 5; changed reset to pc and sp resets
+	 input [15:0] immPlusPC,
+	 input [15:0] pcPlusMary,
+	 input [15:0] jcmpImm,
+	 input [15:0] jcmpImmLS,
+	 input jcmp,
+	 input PCReset,
+	 input SPReset,
 	 output [15:0] MemVal_out,
 	 output [15:0] Inst_out,
 	 output [15:0] pc_out,
@@ -26,19 +33,27 @@ module PCSPandMemoryBlock(
 pc_block pc_block(
 		.clock(clock),
 		.pcSrc(PCSrc),
+		// from ALU
+		.immPlusPC(immPlusPC),
 		.immAddr(ze_imm),
 		.ra(RAData),
 		.mary(MaryData),
+		// all 3 of these should come from ALu
+		.pcPlusMary(pcPlusMary),
+		.jcmpImm(jcmpImm),
+		.jcmpImmLS(jcmpImmLS),
 		.comp(CompData),
+		.jcmp(jcmp),
 		.pcWrite(PCWrite),
-		.pcOut(pc_out)
+		.pcReset(PCReset),
+		.pcCur(pc_out)
 	);
 	
 sp_block sp_block(
 		.clock(clock),
 		.spSrc(SPSrc),
 		.spWrite(SPWrite),
-		.spReset(reset),
+		.spReset(SPReset),
 		.spCur(sp_out)
 	);
 	
