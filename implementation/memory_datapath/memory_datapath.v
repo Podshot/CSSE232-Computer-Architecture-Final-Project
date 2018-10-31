@@ -40,8 +40,6 @@ module memory_datapath(
      
      always @* begin
         if (MemWrite == 1'b1) begin
-            $display("-- Initial Addr: %b", mux_to_mem_addr);
-            $display("-- Initial Data: %b", mux_to_mem_data);
             case (MemDst)
                 3'b000: begin // from pc
                     assign mux_to_mem_addr = pc;
@@ -56,19 +54,10 @@ module memory_datapath(
                     assign mux_to_mem_addr = ShelleyData;
                 end
                 3'b100: begin // from stack pointer + 2
-                    $display("=====");
                     assign mux_to_mem_addr = sp_in + 2'b10;
-                    $display("sp: %b", sp_in);
-                    $display("mem: %b", mux_to_mem_addr);
-                    $display("=====");
                 end
                 3'b101: begin // immediate left-shifted 2 + stack pointer
-                    $display("+++++");
                     assign mux_to_mem_addr = sp_in + ls_imm;
-                    $display("sp: %b", sp_in);
-                    $display("shifted: %b", ls_imm);
-                    $display("mem: %b", mux_to_mem_addr);
-                    $display("+++++");
                 end
                 default: begin
                 end
@@ -77,12 +66,9 @@ module memory_datapath(
             case (MemSrc)
                 2'b00: begin // from mary
                     assign mux_to_mem_data = MaryData;
-                    $display("== Using mary...");
                 end
                 2'b01: begin // from shelley
                     assign mux_to_mem_data = ShelleyData;
-                    $display("++ Using shelley...");
-                    $display("++ Shelley: %b", ShelleyData);
                 end
                 2'b10: begin // from ra
                     assign mux_to_mem_data = RAData;
@@ -90,8 +76,6 @@ module memory_datapath(
                 default: begin
                 end
             endcase
-            $display("-- Final Addr: %b", mux_to_mem_addr);
-            $display("-- Final Data: %b", mux_to_mem_data);
         end
      end
 	  
