@@ -3,6 +3,7 @@
 module RegBlockAndAlu(
 	input [15:0] memval,
 	input [7:0] immediate,
+	input [15:0] sp,
 	input [15:0] pc,
 	input mary_write,
 	input shelley_write,
@@ -14,13 +15,15 @@ module RegBlockAndAlu(
 	input clock,
 	input [0:0] SrcA,
 	input [1:0] SrcB,
-	input [2:0] AluOp,
+	input [3:0] AluOp,
 	output overflow,
-	output [15:0] aluout,
 	output [15:0] mary_output,
 	output [15:0] shelley_output,
 	output [15:0] comp_output,
-	output [15:0] ra_output
+	output [15:0] ra_output,
+	output [15:0] zext_imm_output,
+	output [15:0] sext_imm_output,
+	output [15:0] sext_ls_imm_output
 	);
 
 	//outputs of regblock
@@ -47,20 +50,24 @@ module RegBlockAndAlu(
 	reg [15:0] aluout_reg;
 	wire Overflow;
 	
-	always @ zeroextender_out
+	always @ *
+	begin
 		zext_imm = zeroextender_out;
-	always @ signextender_out
 		sext_imm = signextender_out;
-	always @ leftshifter_out
 		sext_ls_imm = leftshifter_out;
-	always @ mary_reg_out
 		mary_out = mary_reg_out;
-	always @ shelley_reg_out
 		shelley_out = shelley_reg_out;
-	always @ comp_reg_out
-		comp_out = comp_reg_out;
-	always @ ra_reg_out
 		ra_out = ra_reg_out;
+		comp_out = comp_reg_out;
+	end
+	
+	assign ra_output = ra_reg_out;
+	assign comp_output = comp_reg_out;
+	assign shelley_output = shelley_reg_out;
+	assign mary_output = mary_reg_out;
+	assign zext_imm_output = zeroextender_out;
+	assign sext_imm_output = signextender_out;
+	assign sext_ls_imm_output = leftshifter_out;
 	
 zeroextender zeroextender(
 	.in(immediate),

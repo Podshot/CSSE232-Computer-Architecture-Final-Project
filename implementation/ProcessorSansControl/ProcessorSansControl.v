@@ -21,7 +21,8 @@ module ProcessorSansControl(
 	input SrcA,
 	input [1:0] SrcB,
 	input [3:0] AluOp,
-	output overflow_output
+	output overflow_output,
+	output [15:0] instruction
    );
 
 
@@ -54,10 +55,12 @@ PCSPandMemoryBlock PCSPandMemoryBlock(
 	begin
 		inst_reg = Inst;
 	end
+	
+	assign instruction = Inst;
 
 RegBlockAndAlu RegBlockAndAlu(
 	.memval(MemVal),
-	.immediate(inst_reg[10:2]),
+	.immediate(inst_reg[9:2]),
 	.sp(sp),
 	.pc(pc),
 	.mary_write(mary_write),
