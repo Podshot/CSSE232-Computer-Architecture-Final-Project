@@ -12,10 +12,11 @@ module memory(
 	
 	always @ (posedge clock)
 	begin
-		if (MemWrite == 1'b1)
+		if (MemWrite == 1'b1) begin
 			main_memory[Address] = DataIn;
-		else
+		end else begin
 			internal_mem_val = main_memory[Address];
+		end
 	end
 	
 	assign MemVal = internal_mem_val;
