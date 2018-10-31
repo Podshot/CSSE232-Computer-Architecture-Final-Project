@@ -29,6 +29,8 @@ module contro_unit_test;
 	// Inputs
 	reg [4:0] OPCODE;
 	reg flagbit;
+	reg CLK;
+	reg Reset; 
 
 	// Outputs
 	wire MemRead;
@@ -53,10 +55,13 @@ module contro_unit_test;
 	wire SrcB;
 	wire [2:0] ALUOP;
 
+
 	// Instantiate the Unit Under Test (UUT)
 	control_unit uut (
 		.OPCODE(OPCODE), 
-		.flagbit(flagbit), 
+		.flagbit(flagbit),
+		.CLK(CLK), 
+		.Reset(Reset),
 		.MemRead(MemRead), 
 		.MemWrite(MemWrite), 
 		.MemSrc(MemSrc), 
@@ -79,14 +84,23 @@ module contro_unit_test;
 		.SrcB(SrcB), 
 		.ALUOP(ALUOP)
 	);
+	
+	always
+	begin
+		#10 CLK = !CLK; 
+	end
 
 	initial begin
 		// Initialize Inputs
 		OPCODE = 0;
 		flagbit = 0;
+		CLK = 0;
+		Reset = 1; 
 
 		// Wait 100 ns for global reset to finish
 		#100;
+		
+		
         
 		// Add stimulus here
 		// Add stimulus here
@@ -98,9 +112,12 @@ module contro_unit_test;
 		$display("******************************");
 		
 		//Testing APUT
+		CLK = 0; 
+		Reset = 0; 
 		OPCODE = 0; 
 		flagbit = 0; 
-		#100; 
+		//current_state = 2; 
+		#45; 
 		
 		if(MaryWrite == 1'b1 && MarySrc == 2'b11) 
 			$display("Testing APUT Passed");
@@ -123,7 +140,7 @@ module contro_unit_test;
 		OPCODE = 5'b00001;
 		#100; 
 		  
-		if(SPWrite == 1'b1 && SPSrc == 2'b01 && MemWrite == 1'b1 && MemSrc == 3'b100)
+		if(SPWrite == 1'b1 && SPSrc == 2'b01 && MemWrite == 1'b1 && MemDst == 3'b100)
 			$display("Testing SPUT Passed");
 		else 
 			$display("Testing SPUT Failed"); 
@@ -198,7 +215,7 @@ module contro_unit_test;
 		flagbit = 0; 
 		OPCODE = 5'b00010;
 		#100;  
-		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 3'b010 && MaryWrite == 1'b1 && MarySrc == 2'b01)
+		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 4'b0010 && MaryWrite == 1'b1 && MarySrc == 2'b01)
 			$display("Testing AADD Passed");
 		else
 			$display("Testing AADD Failed"); 
@@ -207,7 +224,7 @@ module contro_unit_test;
 		flagbit = 1; 
 		OPCODE = 5'b00010;
 		#100; 
-		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 3'b010 && MaryWrite == 1'b1 && MarySrc == 2'b01)
+		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 4'b0010 && MaryWrite == 1'b1 && MarySrc == 2'b01)
 			$display("Testing AADD@ Passed");
 		else
 			$display("Testing AADD@ Failed"); 
@@ -216,7 +233,7 @@ module contro_unit_test;
 		flagbit = 0; 
 		OPCODE = 5'b00011;
 		#100;  
-		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 3'b011 && MaryWrite == 1'b1 && MarySrc == 2'b01)
+		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 4'b0011 && MaryWrite == 1'b1 && MarySrc == 2'b01)
 			$display("Testing ASUB Passed");
 		else
 			$display("Testing ASUB Failed"); 
@@ -225,7 +242,7 @@ module contro_unit_test;
 		flagbit = 1; 
 		OPCODE = 5'b00011;
 		#100; 
-		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 3'b011 && MaryWrite == 1'b1 && MarySrc == 2'b01)
+		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 4'b0011 && MaryWrite == 1'b1 && MarySrc == 2'b01)
 			$display("Testing ASUB@ Passed");
 		else
 			$display("Testing ASUB@ Failed"); 
@@ -317,7 +334,7 @@ module contro_unit_test;
 		flagbit = 0;
 		OPCODE = 5'b01111;
 		#100; 
-		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 3'b001 && CompWrite == 1'b1)
+		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 4'b0001 && MaryWrite == 1'b1 && MarySrc == 2'b01)
 			$display("Testing LORR Passed");
 		else 
 			$display("Testing LORR Failed"); 
@@ -326,7 +343,7 @@ module contro_unit_test;
 		flagbit = 1;
 		OPCODE = 5'b01111;
 		#100; 
-		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 3'b001 && CompWrite == 1'b1)
+		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 4'b0001 && MaryWrite == 1'b1 && MarySrc == 2'b01)
 			$display("Testing LORR@ Passed");
 		else 
 			$display("Testing LORR@ Failed"); 
@@ -336,11 +353,21 @@ module contro_unit_test;
 		flagbit = 0; 
 		OPCODE = 5'b10000;
 		#100; 
-		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 3'b000 && CompWrite == 1'b1) 
+		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 4'b0000 && MaryWrite == 1'b1 && MarySrc == 2'b01) 
 			$display("Testing LAND Passed");
 		else 
 			$display("Testing LAND Failed"); 
+		
+		//Testing LAND
+		flagbit = 1; 
+		OPCODE = 5'b10000;
+		#100; 
+		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 4'b0000 && MaryWrite == 1'b1 && MarySrc == 2'b01) 
+			$display("Testing LAND@ Passed");
+		else 
+			$display("Testing LAND@ Failed"); 
 			
+		
 		//Testing Comparisons
 		$display("******************************");
 		$display("Tests for Comparison Operations:");
@@ -350,7 +377,7 @@ module contro_unit_test;
 		flagbit = 0; 
 		OPCODE = 5'b01100;
 		#100; 
-		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 3'b110 && CompWrite == 1'b1) 
+		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 4'b0110 && CompWrite == 1'b1) 
 			$display("Testing CEQU Passed");
 		else 
 			$display("Testing CEQU Failed"); 
@@ -359,7 +386,7 @@ module contro_unit_test;
 		flagbit = 1; 
 		OPCODE = 5'b01100;
 		#100; 
-		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 3'b110 && CompWrite == 1'b1) 
+		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 4'b0110 && CompWrite == 1'b1) 
 			$display("Testing CEQU@ Passed");
 		else 
 			$display("Testing CEQU@ Failed"); 
@@ -368,7 +395,7 @@ module contro_unit_test;
 		flagbit = 0;
 		OPCODE = 5'b01101;
 		#100; 
-		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 3'b100 && CompWrite == 1'b1)
+		if(SrcA == 1'b0 && SrcB == 2'b01 && ALUOP == 4'b0100 && CompWrite == 1'b1)
 			$display("Testing CLES Passed");
 		else 
 			$display("Testing CLES Failed"); 
@@ -377,7 +404,7 @@ module contro_unit_test;
 		flagbit = 1;
 		OPCODE = 5'b01101;
 		#100; 
-		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 3'b100 && CompWrite == 1'b1)
+		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 4'b0100 && CompWrite == 1'b1)
 			$display("Testing CLES Passed");
 		else 
 			$display("Testing CLES Failed"); 	
@@ -386,7 +413,7 @@ module contro_unit_test;
 		flagbit = 0; 
 		OPCODE = 5'b01110;
 		#100; 
-		if(SrcA == 1'b0 && SrcB == 2'b01 &&  ALUOP == 3'b101 && CompWrite == 1'b1)
+		if(SrcA == 1'b0 && SrcB == 2'b01 &&  ALUOP == 4'b0101 && CompWrite == 1'b1)
 			$display("Testing CGRE Passed");
 		else 
 			$display("Testing CGRE Failed"); 
@@ -395,7 +422,7 @@ module contro_unit_test;
 		flagbit = 1; 
 		OPCODE = 5'b01110; 
 		#100;
-		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 3'b101 && CompWrite == 1'b1)
+		if(SrcA == 1'b0 && SrcB == 2'b00 && ALUOP == 4'b0101 && CompWrite == 1'b1)
 			$display("Testing CGRE@ Passed");
 		else 
 			$display("Testing CGRE@ Failed");
