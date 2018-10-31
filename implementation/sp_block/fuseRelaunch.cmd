@@ -1,0 +1,1 @@
+-intstyle "ise" -incremental -lib "unisims_ver" -lib "unimacro_ver" -lib "xilinxcorelib_ver" -o "C:/Users/stockwja/Documents/Classes/CSSE232/1819a-csse232-02-3V/implementation/sp_block/sp_block_tb_isim_beh.exe" -prj "C:/Users/stockwja/Documents/Classes/CSSE232/1819a-csse232-02-3V/implementation/sp_block/sp_block_tb_beh.prj" "work.sp_block_tb" "work.glbl" 
