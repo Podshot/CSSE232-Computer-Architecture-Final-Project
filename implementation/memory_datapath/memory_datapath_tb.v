@@ -73,6 +73,7 @@ module memory_datapath_tb;
      end
 	  
 	integer i;
+	integer integrity_flag = 1;
 
 	initial begin
 		// Initialize Inputs
@@ -106,16 +107,6 @@ module memory_datapath_tb;
 		end
 		
 		#75;
-//		MemWrite = 0;
-//		MemSrc = 0;
-//		pc = 0;
-//		sp_in = 0;
-//		ze_imm = 0;
-//		ls_imm = 0;
-//		MaryData = 0;
-//		ShelleyData = 0;
-//		RAData = 0;
-//		#75;
 		
 		// Test #2 - Set value from Shelley into memory at immediate address
 		MemWrite = 1;
@@ -133,16 +124,6 @@ module memory_datapath_tb;
 		end
 		
 		#75;
-//		MemWrite = 0;
-//		MemSrc = 0;
-//		pc = 0;
-//		sp_in = 0;
-//		ze_imm = 0;
-//		ls_imm = 0;
-//		MaryData = 0;
-//		ShelleyData = 0;
-//		RAData = 0;
-//		#75;
 		
 		// Test #3 - Set value from RA into memory at immediate address
 		MemWrite = 1;
@@ -160,16 +141,6 @@ module memory_datapath_tb;
 		end
 		
 		#75;
-//		MemWrite = 0;
-//		MemSrc = 0;
-//		pc = 0;
-//		sp_in = 0;
-//		ze_imm = 0;
-//		ls_imm = 0;
-//		MaryData = 0;
-//		ShelleyData = 0;
-//		RAData = 0;
-//		#75;
 		
 		// Test #4 - Set value from Mary into memory at PC address
 		MemWrite = 1;
@@ -187,16 +158,6 @@ module memory_datapath_tb;
 		end
 		
 		#75;
-//		MemWrite = 0;
-//		MemSrc = 0;
-//		pc = 0;
-//		sp_in = 0;
-//		ze_imm = 0;
-//		ls_imm = 0;
-//		MaryData = 0;
-//		ShelleyData = 0;
-//		RAData = 0;
-//		#75;
 		
 		// Test #5 - Set value from Mary into memory at (SP + 2) address
 		MemWrite = 1;
@@ -208,27 +169,14 @@ module memory_datapath_tb;
 		MemWrite = 0;
 		#50;
 		if (mem_out == 5) begin
-			$display("%b", sp_in);
-			$display("%b", sp_in + 2'b10);
 			$display("[Test #5]: Passed"); 
 		end else begin
 			$display("[Test #5]: Failed");
 		end
 		
 		#75;
-//		MemWrite = 0;
-//		MemSrc = 0;
-//		pc = 0;
-//		sp_in = 0;
-//		ze_imm = 0;
-//		ls_imm = 0;
-//		MaryData = 0;
-//		ShelleyData = 0;
-//		RAData = 0;
-//		#75;
 		
 		// Test #6 - Set value from Shelley into memory at (SP + immediate shifted left 2)
-		///*
 		MemWrite = 1;
 		MemDst = 3'b101;
 		MemSrc = 2'b01;
@@ -243,33 +191,27 @@ module memory_datapath_tb;
 		end else begin
 			$display("[Test #6]: Failed");
 		end
-		//*/
 		
-		#300;
-//		MemWrite = 0;
-//		MemSrc = 0;
-//		pc = 0;
-//		sp_in = 0;
-//		ze_imm = 0;
-//		ls_imm = 0;
-//		MaryData = 0;
-//		ShelleyData = 0;
-//		RAData = 0;
-//		#75;
+		#75;
 		
 		// Test #7 - Test memory integrity
-
+		MemWrite = 0;
 		MemDst = 3'b001;
 		#50
-		for (i = 0; i <= 5; i = i + 1) begin
+		for (i = 0; i < 6; i = i + 1) begin
 			ze_imm = i;
-			MemWrite = 0;
 			#50
 			if (mem_out != i + 1) begin
-				$display("[Test #7]: Value at memory address %h was %h", i, mem_out);
+				$display("[Test #7]: Mismatched value at memory address %h was %h", ze_imm, mem_out);
+				integrity_flag = 0;
 			end
 		end
 
+		if (integrity_flag == 1) begin
+			$display("[Test #7]: Passed");
+		end else begin
+			$display("[Test #7]: Failed");
+		end
 	end
       
 endmodule

@@ -39,44 +39,42 @@ module memory_datapath(
      wire [15:0] mem_val = 0;
      
      always @* begin
-        if (MemWrite == 1'b1) begin
-            case (MemDst)
-                3'b000: begin // from pc
-                    assign mux_to_mem_addr = pc;
-                end
-                3'b001: begin // from immediate
-                    assign mux_to_mem_addr = ze_imm;
-                end
-                3'b010: begin // from mary
-                    assign mux_to_mem_addr = MaryData;
-                end
-                3'b011: begin // from shelley
-                    assign mux_to_mem_addr = ShelleyData;
-                end
-                3'b100: begin // from stack pointer + 2
-                    assign mux_to_mem_addr = sp_in + 2'b10;
-                end
-                3'b101: begin // immediate left-shifted 2 + stack pointer
-                    assign mux_to_mem_addr = sp_in + ls_imm;
-                end
-                default: begin
-                end
-            endcase
-            
-            case (MemSrc)
-                2'b00: begin // from mary
-                    assign mux_to_mem_data = MaryData;
-                end
-                2'b01: begin // from shelley
-                    assign mux_to_mem_data = ShelleyData;
-                end
-                2'b10: begin // from ra
-                    assign mux_to_mem_data = RAData;
-                end
-                default: begin
-                end
-            endcase
-        end
+			case (MemDst)
+				3'b000: begin // from pc
+					mux_to_mem_addr = pc;
+				end
+            3'b001: begin // from immediate
+                mux_to_mem_addr = ze_imm;
+            end
+            3'b010: begin // from mary
+                mux_to_mem_addr = MaryData;
+            end
+            3'b011: begin // from shelley
+                mux_to_mem_addr = ShelleyData;
+            end
+            3'b100: begin // from stack pointer + 2
+                mux_to_mem_addr = sp_in + 2'b10;
+            end
+            3'b101: begin // immediate left-shifted 2 + stack pointer
+                mux_to_mem_addr = sp_in + ls_imm;
+            end
+            default: begin
+            end
+        endcase        
+			
+        case (MemSrc)
+            2'b00: begin // from mary
+                mux_to_mem_data = MaryData;
+            end
+            2'b01: begin // from shelley
+                mux_to_mem_data = ShelleyData;
+            end
+            2'b10: begin // from ra
+                mux_to_mem_data = RAData;
+            end
+            default: begin
+            end
+        endcase
      end
 	  
 	  memory mem (
@@ -86,4 +84,5 @@ module memory_datapath(
         .clock(clock),
         .MemVal(mem_out)
      );
+	  
 endmodule
