@@ -45,6 +45,7 @@ module control_unit(
 	 
 	 reg [3:0] current_state;
 	 reg [3:0] next_state;
+	 reg max_state; 
 
 //////////////////////////////
 //    State Declarations    //
@@ -99,6 +100,7 @@ module control_unit(
 		SrcA = 0; 
 		SrcB = 0; 
 		ALUOP = 0; 
+		max_state = 0; 
 
 
 //////////////////////////////
@@ -142,6 +144,10 @@ module control_unit(
 			end 
 	endcase 
 	
+	
+//Separate the control stuff from the next state 
+
+	
 //////////////////////////////
 //      Input/Output        //
 //////////////////////////////
@@ -158,6 +164,7 @@ module control_unit(
 			if(current_state == Third) begin 
 				MaryWrite = 1'b1; 
 				MarySrc = 2'b11;
+			
 			end 
 		end
 
@@ -184,6 +191,7 @@ module control_unit(
 			if(current_state == Third) begin
 				MemWrite = 1'b0; 
 				MemDst = 3'b101; 
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
 				MaryWrite = 1'b1;
@@ -196,6 +204,7 @@ module control_unit(
 			if(current_state == Third) begin
 				MemWrite = 1'b0; 
 				MemDst = 3'b101; 
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
 				ShelleyWrite = 1'b1;
@@ -208,6 +217,7 @@ module control_unit(
 			if(current_state == Third) begin
 				MemWrite = 1'b0; 
 				MemDst = 3'b100; 
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
 				SPWrite = 1'b1; 
@@ -222,6 +232,7 @@ module control_unit(
 			if(current_state == Third) begin 
 				MemWrite = 1'b0; 
 				MemDst = 3'b100;
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
 				SPWrite = 1'b1; 
@@ -275,6 +286,7 @@ module control_unit(
 				SrcA = 1'b0;
 				SrcB = 2'b01;
 				ALUOP = 4'b0010;
+				max_state = 1; 
 			end
 			if(current_state == Fourth) begin 
 				MaryWrite = 1'b1;  
@@ -288,6 +300,7 @@ module control_unit(
 				SrcA = 1'b0;
 				SrcB = 2'b00;
 				ALUOP = 4'b0010;
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin
 				MaryWrite = 1'b1;  
@@ -302,6 +315,7 @@ module control_unit(
 				SrcA = 1'b0;
 				SrcB = 2'b01;
 				ALUOP = 4'b0011;
+				max_state = 1; 
 			end
 			if(current_state == Fourth) begin
 				MaryWrite = 1'b1;  
@@ -315,6 +329,7 @@ module control_unit(
 				SrcA = 1'b0;
 				SrcB = 2'b00;
 				ALUOP = 4'b0011;
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
 				MaryWrite = 1'b1;  
@@ -412,6 +427,7 @@ module control_unit(
 				SrcA = 1'b0; 
 				SrcB = 2'b01; 
 				ALUOP = 4'b0001;
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
 				MaryWrite = 1'b1; 
@@ -424,6 +440,7 @@ module control_unit(
 				SrcA = 1'b0; 
 				SrcB = 2'b00; 
 				ALUOP = 4'b0001;
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
 				MaryWrite = 1'b1; 
@@ -437,6 +454,7 @@ module control_unit(
 				SrcA = 1'b0; 
 				SrcB = 2'b01; 
 				ALUOP = 4'b0000;
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
 				MaryWrite = 1'b1; 
@@ -450,6 +468,7 @@ module control_unit(
 				SrcA = 1'b0; 
 				SrcB = 2'b00; 
 				ALUOP = 4'b0000;
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
 				MaryWrite = 1'b1; 
@@ -457,12 +476,67 @@ module control_unit(
 			end 
 		end
 
-//CASE 30: SHFL
+
+//CASE 30: SHFR
+	if(OPCPDE == 5'b10010 && flagbit == 1'b0) begin 
+		if(current_state == Third) begin 
+			SrcA = 1'b0; 
+			SrcB = 2'b01; 
+			ALUOP = 4'b1001;
+			max_state = 1; 
+		end 
+		if(current_state == Fourth) begin 
+			MaryWrite = 1'b1; 
+			MarySrc = 2'b01; 
+		end 
+	end 
+			
+
+//CASE 31: SHFR@
 	//?????????????????????
+	if(OPCPDE == 5'b10010 && flagbit == 1'b0) begin 
+		if(current_state == Third) begin 
+			SrcA = 1'b0; 
+			SrcB = 2'b00; 
+			ALUOP = 4'b1001;
+			max_state = 1; 
+		end 
+		if(current_state == Fourth) begin 
+			MaryWrite = 1'b1; 
+			MarySrc = 2'b01; 
+		end 
+	end 
+	
+//CASE 30: SHFL
+	if(OPCPDE == 5'b10001 && flagbit == 1'b0) begin 
+		if(current_state == Third) begin 
+			SrcA = 1'b0; 
+			SrcB = 2'b01;
+			ALUOP = 4'b10000;
+			max_state = 1; 
+		end 
+		if(current_state == Fourth) begin 
+			MaryWrite = 1'b1; 
+			MarySrc = 2'b01;
+		end 
+	end 
+			
 
 //CASE 31: SHFL@
 	//?????????????????????
-
+	
+	if(OPCPDE == 5'b10001 && flagbit == 1'b1 ) begin 
+			if(current_state == Third) begin 
+				SrcA = 1'b0; 
+				SrcB = 2'b00;
+				ALUOP = 4'b10000;
+				max_state = 1; 
+			end 
+			if(current_state == Fourth) begin 
+				MaryWrite = 1'b1; 
+				MarySrc = 2'b01;
+			end 
+		end 
 
 //////////////////////////////
 //  COMPARISON OPERATIONS   //
@@ -474,6 +548,7 @@ module control_unit(
 				SrcA = 1'b0; 
 				SrcB = 2'b01; 
 				ALUOP = 4'b0110;
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
 				CompWrite = 1'b1; 
@@ -486,6 +561,7 @@ module control_unit(
 				SrcA = 1'b0; 
 				SrcB = 2'b00; 
 				ALUOP = 4'b0110; 
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
 				CompWrite = 1'b1; 
@@ -498,6 +574,7 @@ module control_unit(
 				SrcA = 1'b0;
 				SrcB = 2'b01; 
 				ALUOP = 4'b0100;
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
 				CompWrite = 1'b1;
@@ -510,6 +587,7 @@ module control_unit(
 				SrcA = 1'b0;
 				SrcB = 2'b00; 
 				ALUOP = 4'b0100;
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
 				CompWrite = 1'b1; 
@@ -522,6 +600,7 @@ module control_unit(
 				SrcA = 1'b0;
 				SrcB = 2'b01; 
 				ALUOP = 4'b0101;
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
 				CompWrite = 1'b1; 
@@ -534,6 +613,7 @@ module control_unit(
 				SrcA = 1'b0;
 				SrcB = 2'b00; 
 				ALUOP = 4'b0101;
+				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
 				CompWrite = 1'b1; 
@@ -549,6 +629,7 @@ module control_unit(
 			if(current_state == Third) begin 
 				MemWrite = 1'b0;
 				MemDst = 3'b001;
+				
 			end
 			if(current_state == Fourth) begin 
 				MaryWrite = 1'b1; 

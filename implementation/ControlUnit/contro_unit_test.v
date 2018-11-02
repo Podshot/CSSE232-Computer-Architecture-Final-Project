@@ -117,24 +117,36 @@ module contro_unit_test;
 		OPCODE = 0; 
 		flagbit = 0; 
 		//current_state = 2; 
-		#45; 
+		#60; 
 		
 		if(MaryWrite == 1'b1 && MarySrc == 2'b11) 
 			$display("Testing APUT Passed");
 		else 
 			$display("Testing APUT Failed");
-		#1; 
+		
+		#100; 
 		
 		//Testing APUT@
+		Reset = 1; 
+		//CLK = 0; 
 		OPCODE = 0; 
-		flagbit = 1; 
+		flagbit = 1;
+		#20;
+		
+		
+		Reset = 0; 
+		CLK = 0; 
 		#100; 
+
 		
 		if(ShelleyWrite == 1'b1 && ShelleySrc == 2'b01) 
 			$display("Testing APUT@ Passed");
 		else 
 			$display("Testing APUT@ Failed"); 
 			
+		$finish; 
+		
+		/*
 		//Testing SPUT 
 		flagbit = 0; 
 		OPCODE = 5'b00001;
@@ -485,7 +497,9 @@ module contro_unit_test;
 		else
 			$display("Testing SWAP Failed"); 
 			
-		end
+		
+		*/ 
+		end 
 		 
 		
       
