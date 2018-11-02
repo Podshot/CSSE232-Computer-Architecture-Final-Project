@@ -18,7 +18,7 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module zeroextender(
+module zero_extender(
     input [7:0] in,
     output reg [15:0] out
     );

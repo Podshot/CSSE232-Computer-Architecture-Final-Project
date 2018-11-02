@@ -19,14 +19,27 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module register_component(
-    input [15:0] in,
-    input clock,
-    input write,
-    output reg [15:0] out
+   input [15:0] in,
+   input clock,
+   input write,
+   output wire [15:0] out,
+	input reset
     );
 	 
-	 always @(posedge clock)
-		if (write)
-			out <= in;
+	reg [15:0] internal;
+	
+	always @(posedge clock)
+	begin
+		if (reset)
+		begin
+			internal = 16'b0000000000000000;
+		end
+		else if (write)
+		begin
+			internal = in;
+		end
+	end
+	
+	assign out = internal;
 
 endmodule

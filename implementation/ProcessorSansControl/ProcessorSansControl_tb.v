@@ -26,6 +26,7 @@ module ProcessorSansControl_tb;
 
 	// Outputs
 	wire overflow_output;
+	wire [15:0] instruction;
 
 	// Instantiate the Unit Under Test (UUT)
 	ProcessorSansControl uut (
@@ -49,12 +50,13 @@ module ProcessorSansControl_tb;
 		.SrcA(SrcA), 
 		.SrcB(SrcB), 
 		.AluOp(AluOp), 
-		.overflow_output(overflow_output)
+		.overflow_output(overflow_output),
+		.instruction(instruction)
 	);
 	
 	always
 	begin
-		#50 clock = !clock;
+		#20 clock = !clock;
 	end
 
 	initial begin
@@ -66,7 +68,7 @@ module ProcessorSansControl_tb;
 		PCSrc = 0;
 		SPSrc = 0;
 		PCWrite = 0;
-		SPWrite = 1;
+		SPWrite = 0;
 		InstWrite = 0;
 		reset = 1;
 		mary_write = 0;
@@ -79,10 +81,77 @@ module ProcessorSansControl_tb;
 		SrcA = 0;
 		SrcB = 0;
 		AluOp = 0;
-
-
-		//This test cannot be written until
-		//the PC block is fully functional
+		
+		#100;
+		#30;
+		//reset everything
+		//note values in memory post-reset:
+		//mem[0] = 10
+		//mem[1] = 5
+		//mem[2] = 12
+		//mem[3] = 6
+		
+		
+		//test 1: aadd@
+		reset = 0;
+		MemWrite = 0;
+		MemDst = 0;
+		PCWrite = 1;
+		PCSrc = 0;
+		#40; //load 10 into memval, increment pc by 2
+		mary_src = 0;
+		mary_write = 1;
+		#40; //load 10 into mary, load 5 into memval, increment pc by 2
+		PCWrite = 0;
+		mary_write = 0;
+		shelley_write = 1;
+		shelley_src = 0;
+		#40; //load 5 into shelley
+		PCWrite = 0;
+		shelley_write = 0;
+		SrcA = 0;
+		SrcB = 0;
+		AluOp = 2; //add
+		#40; //add mary and shelley
+		mary_write = 1;
+		mary_src = 1;
+		#40; //store 5+10=15 into mary
+		mary_write = 0;
+		MemDst = 3; //address in shelley = 5
+		MemSrc = 0; //value in mary = 15
+		MemWrite = 1;
+		#40; //store value 15 at address 5		
+		
+		
+		
+		//test 2: asub@
+		MemWrite = 0;
+		MemDst = 0;
+		PCWrite = 1;
+		mary_src = 0;
+		mary_write = 1;
+		#40; //load 12 into mary, increment pc by 2
+		mary_write = 0;
+		shelley_write = 1;
+		shelley_src = 0;
+		PCWrite = 1;
+		#40; //load 6 into shelley
+		#40;
+		PCWrite = 0;
+		shelley_write = 0;
+		SrcA = 0;
+		SrcB = 0;
+		AluOp = 3; //sub
+		#40; //subtract
+		mary_write = 1;
+		mary_src = 1;
+		#40; //store 12-6=6 into mary
+		mary_write = 0;
+		MemDst = 3;
+		MemSrc = 0;
+		MemWrite = 1;
+		#40; //store value 6 at address 6
+		$finish;
 
 	end
       

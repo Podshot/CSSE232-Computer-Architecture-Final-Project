@@ -31,7 +31,8 @@ module memory_datapath(
     input [15:0] ShelleyData,
     input [15:0] RAData,
     
-    output [15:0] mem_out
+    output [15:0] mem_out,
+	 input reset
     );
      
      reg [15:0] mux_to_mem_addr;
@@ -82,7 +83,8 @@ module memory_datapath(
         .DataIn(mux_to_mem_data),
         .MemWrite(MemWrite),
         .clock(clock),
-        .MemVal(mem_out)
+        .MemVal(mem_out),
+		  .reset(reset)
      );
 	  
 endmodule

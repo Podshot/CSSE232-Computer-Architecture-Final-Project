@@ -12,19 +12,12 @@ module PCSPandMemoryBlock(
 	 input [15:0] RAData,
 	 input [15:0] CompData,
 	 input [2:0] PCSrc,
-	 input [2:0] SPSrc,
+	 input [1:0] SPSrc,
 	 input PCWrite,
 	 input SPWrite,
 	 input InstWrite,
-	 // Joy added 5; changed reset to pc and sp resets
-	 input [15:0] immPlusPC,
-	 input [15:0] pcPlusMary,
-	 input [15:0] jcmpImm,
-	 input [15:0] jcmpImmLS,
-	 input jcmp,
-	 input PCReset,
-	 input SPReset,
-	 output [15:0] MemVal_out,
+	 input reset,
+	 output [15:0] mem_out,
 	 output [15:0] Inst_out,
 	 output [15:0] pc_out,
 	 output [15:0] sp_out
@@ -33,31 +26,22 @@ module PCSPandMemoryBlock(
 pc_block pc_block(
 		.clock(clock),
 		.pcSrc(PCSrc),
-		// from ALU
-		.immPlusPC(immPlusPC),
 		.immAddr(ze_imm),
 		.ra(RAData),
 		.mary(MaryData),
-		// all 3 of these should come from ALu
-		.pcPlusMary(pcPlusMary),
-		.jcmpImm(jcmpImm),
-		.jcmpImmLS(jcmpImmLS),
 		.comp(CompData),
-		.jcmp(jcmp),
 		.pcWrite(PCWrite),
-		.pcReset(PCReset),
-		.pcCur(pc_out)
+		.reset(reset),
+		.pcOut(pc_out)
 	);
 	
 sp_block sp_block(
 		.clock(clock),
 		.spSrc(SPSrc),
 		.spWrite(SPWrite),
-		.spReset(SPReset),
+		.reset(reset),
 		.spCur(sp_out)
 	);
-	
-	wire [15:0] mem_out;
 
 memory_datapath memory_datapath(
 		.clock(clock),
@@ -71,21 +55,16 @@ memory_datapath memory_datapath(
 		.MaryData(MaryData),
 		.ShelleyData(ShelleyData),
 		.RAData(RAData),
-		.mem_out(mem_out)
+		.mem_out(mem_out),
+		.reset(reset)
 	);
 		
 register_component Inst(
 	.in(mem_out),
 	.clock(clock),
 	.write(InstWrite),
-	.out(Inst_out)
-	);
-	
-	register_component MemVal(
-	.in(mem_out),
-	.clock(clock),
-	.write(1'b1),
-	.out(MemVal_out)
+	.out(Inst_out),
+	.reset(reset)
 	);
 	
 

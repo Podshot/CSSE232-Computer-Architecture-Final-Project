@@ -25,6 +25,15 @@ module ProcessorSansControl(
 	output [15:0] instruction
    );
 
+	wire [15:0] mem_out;
+	wire [15:0] pc;
+	wire [15:0] sp;
+	wire [15:0] comp;
+	wire [15:0] ra;
+	wire [15:0] shelley;
+	wire [15:0] mary;
+	wire [15:0] sext_ls_imm;
+	wire [15:0] zext_imm;
 
 PCSPandMemoryBlock PCSPandMemoryBlock(
 	.clock(clock),
@@ -43,23 +52,21 @@ PCSPandMemoryBlock PCSPandMemoryBlock(
 	.SPWrite(SPWrite),
 	.InstWrite(InstWrite),
 	.reset(reset),
-	.MemVal_out(MemVal),
-	.Inst_out(Inst),
+	.mem_out(mem_out),
+	.Inst_out(instruction),
 	.pc_out(pc),
 	.sp_out(sp)
 	);
 	
 	reg [15:0] inst_reg;
 	
-	always @ *
+	always @ instruction
 	begin
-		inst_reg = Inst;
+		inst_reg = instruction;
 	end
-	
-	assign instruction = Inst;
 
 RegBlockAndAlu RegBlockAndAlu(
-	.memval(MemVal),
+	.memval(mem_out),
 	.immediate(inst_reg[9:2]),
 	.sp(sp),
 	.pc(pc),
@@ -81,7 +88,8 @@ RegBlockAndAlu RegBlockAndAlu(
 	.ra_output(ra),
 	.zext_imm_output(zext_imm),
 	.sext_imm_output(sext_imm),
-	.sext_ls_imm_output(sext_ls_imm)
+	.sext_ls_imm_output(sext_ls_imm),
+	.reset(reset)
 	);
 	
 	assign overflow_output = overflow;

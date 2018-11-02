@@ -12,7 +12,8 @@ module alu(
 	input [3:0] AluOp,
 	input clock,
 	output [15:0] out,
-	output Overflow
+	output Overflow,
+	input reset
 	);
 	
 	reg [15:0] A; //input to ALU
@@ -23,7 +24,8 @@ module alu(
 	.in(AluOut),
 	.clock(clock),
 	.write(1'b1),
-	.out(out)
+	.out(out),
+	.reset(reset)
 	);
 	
 	always @ *

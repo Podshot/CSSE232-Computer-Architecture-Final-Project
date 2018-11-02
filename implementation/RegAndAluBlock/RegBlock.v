@@ -20,7 +20,8 @@ module RegBlock(
 	output [15:0] mary_out,
 	output [15:0] shelley_out,
 	output [15:0] comp_out,
-	output [15:0] ra_out
+	output [15:0] ra_out,
+	input reset
 	);
 	
 	//registers used to keep track of mux results
@@ -57,28 +58,32 @@ register_component mary(
 	.in(mary_in),
 	.clock(clock),
 	.write(mary_write),
-	.out(mary_out)
+	.out(mary_out),
+	.reset(reset)
 	);
 	
 register_component shelley(
 	.in(shelley_in),
 	.clock(clock),
 	.write(shelley_write),
-	.out(shelley_out)
+	.out(shelley_out),
+	.reset(reset)
 	);
 	
 register_component comp(
 	.in(aluout),
 	.clock(clock),
 	.write(comp_write),
-	.out(comp_out)
+	.out(comp_out),
+	.reset(reset)
 	);
 	
 register_component ra(
 	.in(ra_in),
 	.clock(clock),
 	.write(ra_write),
-	.out(ra_out)
+	.out(ra_out),
+	.reset(reset)
 	);
 
 

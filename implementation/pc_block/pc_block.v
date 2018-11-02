@@ -20,46 +20,41 @@
 //////////////////////////////////////////////////////////////////////////////////
 module pc_block(
 	input clock,
-	input [3:0] pcSrc,
-	input[15:0] immPlusPC,
+	input [2:0] pcSrc,
 	input[15:0] immAddr,
 	input[15:0] ra,
 	input[15:0] mary,
-	input[15:0] pcPlusMary,
-	input[15:0] jcmpImm,
-	input[15:0] jcmpImmLS,
 	input comp,
-	input jcmp,
 	input pcWrite,
-	input pcReset,
-	output wire [15:0] pcCur
+	input reset,
+	output wire [15:0] pcOut
 	);
 	
-	reg[15:0] muxOut; //takes either nextInst or jump to pc
+	reg pcWrite2;
 	
+	reg[15:0] muxOut; //takes either nextInst or jump to pc
 	register_component pc (
 		.in(muxOut),
 		.clock(clock),
-		.write(pcWrite),
-		.out(pcCur)
+		.write(pcWrite && pcWrite2),
+		.out(pcOut),
+		.reset(reset)
 	);
  
-	always @(posedge clock)
+	always @ (immAddr, ra, mary, pcOut, pcSrc, comp)
 	begin
-	if (pcReset)
-		muxOut = 0;
-	else if (jcmp == 0 || (jcmp == 1 && comp == 1))
+		pcWrite2 = (~comp & pcSrc[2] & pcSrc[1]) ? 0 : 1;
 	//switch case acts as mux
 		case( pcSrc )
 	 //adder is just + in verilog
-			 3'b000 : muxOut = pcCur + 2;
-			 3'b001 : muxOut = immPlusPC;
+			 3'b000 : muxOut = pcOut + 1;
+			 3'b001 : muxOut = immAddr + pcOut;
 			 3'b010 : muxOut = immAddr;
 			 3'b011 : muxOut = ra;
 			 3'b100 : muxOut = mary;
-			 3'b101 : muxOut = pcPlusMary;
-			 3'b110 : muxOut = jcmpImm;
-			 3'b111 : muxOut = jcmpImmLS;
+			 3'b101 : muxOut = (mary << 4) + pcOut;
+			 3'b110 : muxOut = immAddr;
+			 3'b111 : muxOut = (immAddr << 4);
 		endcase
 	end
 	

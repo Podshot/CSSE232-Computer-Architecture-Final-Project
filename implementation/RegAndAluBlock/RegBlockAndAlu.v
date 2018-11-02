@@ -23,7 +23,8 @@ module RegBlockAndAlu(
 	output [15:0] ra_output,
 	output [15:0] zext_imm_output,
 	output [15:0] sext_imm_output,
-	output [15:0] sext_ls_imm_output
+	output [15:0] sext_ls_imm_output,
+	input reset
 	);
 
 	//outputs of regblock
@@ -86,7 +87,7 @@ left_shift_2 leftshifter(
 
 RegBlock RegBlock(
 	.memval(memval),
-	.aluout(aluout_reg),
+	.aluout(aluout_wire),
 	.immediate(sext_imm),
 	.pc(pc),
 	.mary_write(mary_write),
@@ -100,7 +101,8 @@ RegBlock RegBlock(
 	.mary_out(mary_reg_out),
 	.shelley_out(shelley_reg_out),
 	.comp_out(comp_reg_out),
-	.ra_out(ra_reg_out)
+	.ra_out(ra_reg_out),
+	.reset(reset)
 );
 
 alu alu(
@@ -114,8 +116,9 @@ alu alu(
 	.SrcB(SrcB),
 	.AluOp(AluOp),
 	.clock(clock),
-	.out(aluout),
-	.Overflow(Overflow)
+	.out(aluout_wire),
+	.Overflow(Overflow),
+	.reset(reset)
 );
 
 endmodule
