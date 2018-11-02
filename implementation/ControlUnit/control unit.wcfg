@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/Users/corialmt/Documents/Sophomore Year/Fall Quarter/CompArch/ControlUnit/work/contro_unit_test_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="contro_unit_test" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="27" />
+   <wvobject fp_name="/contro_unit_test/MemRead" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">MemRead</obj_property>
+      <obj_property name="ObjectShortName">MemRead</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/MemWrite" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">MemWrite</obj_property>
+      <obj_property name="ObjectShortName">MemWrite</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/MemSrc" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">MemSrc[2:0]</obj_property>
+      <obj_property name="ObjectShortName">MemSrc[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/RegWrite" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">RegWrite</obj_property>
+      <obj_property name="ObjectShortName">RegWrite</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/MaryWrite" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">MaryWrite</obj_property>
+      <obj_property name="ObjectShortName">MaryWrite</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/ShelleyWrite" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">ShelleyWrite</obj_property>
+      <obj_property name="ObjectShortName">ShelleyWrite</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/CompWrite" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">CompWrite</obj_property>
+      <obj_property name="ObjectShortName">CompWrite</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/RAWrite" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">RAWrite</obj_property>
+      <obj_property name="ObjectShortName">RAWrite</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/PCWrite" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">PCWrite</obj_property>
+      <obj_property name="ObjectShortName">PCWrite</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/SPWrite" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">SPWrite</obj_property>
+      <obj_property name="ObjectShortName">SPWrite</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/MarySrc" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">MarySrc[1:0]</obj_property>
+      <obj_property name="ObjectShortName">MarySrc[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/ShelleySrc" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">ShelleySrc[1:0]</obj_property>
+      <obj_property name="ObjectShortName">ShelleySrc[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/RASrc" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">RASrc</obj_property>
+      <obj_property name="ObjectShortName">RASrc</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/PCSrc" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">PCSrc[2:0]</obj_property>
+      <obj_property name="ObjectShortName">PCSrc[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/SPSrc" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">SPSrc[1:0]</obj_property>
+      <obj_property name="ObjectShortName">SPSrc[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/RegDst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">RegDst</obj_property>
+      <obj_property name="ObjectShortName">RegDst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/MemDst" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">MemDst[2:0]</obj_property>
+      <obj_property name="ObjectShortName">MemDst[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/RegData" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">RegData</obj_property>
+      <obj_property name="ObjectShortName">RegData</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/SrcA" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">SrcA</obj_property>
+      <obj_property name="ObjectShortName">SrcA</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/SrcB" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">SrcB</obj_property>
+      <obj_property name="ObjectShortName">SrcB</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/ALUOP" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">ALUOP[2:0]</obj_property>
+      <obj_property name="ObjectShortName">ALUOP[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/OPCODE" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">OPCODE[4:0]</obj_property>
+      <obj_property name="ObjectShortName">OPCODE[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/uut/current_state" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">current_state[3:0]</obj_property>
+      <obj_property name="ObjectShortName">current_state[3:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/uut/next_state" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">next_state[3:0]</obj_property>
+      <obj_property name="ObjectShortName">next_state[3:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/flagbit" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">flagbit</obj_property>
+      <obj_property name="ObjectShortName">flagbit</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/CLK" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">CLK</obj_property>
+      <obj_property name="ObjectShortName">CLK</obj_property>
+   </wvobject>
+   <wvobject fp_name="/contro_unit_test/Reset" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">Reset</obj_property>
+      <obj_property name="ObjectShortName">Reset</obj_property>
+   </wvobject>
+</wave_config>
