@@ -62,7 +62,7 @@ module ProcessorSansControl_tb;
 	initial begin
 		// Initialize Inputs
 		clock = 0;
-		MemWrite = 0;
+		MemWrite = 1;
 		MemSrc = 0;
 		MemDst = 0;
 		PCSrc = 0;
@@ -83,6 +83,7 @@ module ProcessorSansControl_tb;
 		AluOp = 0;
 		
 		#100;
+		MemWrite = 1;
 		#30;
 		//reset everything
 		//note values in memory post-reset:
@@ -90,15 +91,16 @@ module ProcessorSansControl_tb;
 		//mem[1] = 5
 		//mem[2] = 12
 		//mem[3] = 6
-		
-		
 		//test 1: aadd@
 		reset = 0;
 		MemWrite = 0;
 		MemDst = 0;
 		PCWrite = 1;
 		PCSrc = 0;
+		InstWrite = 1;
 		#40; //load 10 into memval, increment pc by 2
+		#40; //write to inst
+		$finish;
 		mary_src = 0;
 		mary_write = 1;
 		#40; //load 10 into mary, load 5 into memval, increment pc by 2

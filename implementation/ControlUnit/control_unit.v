@@ -36,7 +36,7 @@ module control_unit(
     output reg RegData,
     output reg SrcA,
     output reg SrcB,
-    output reg [2:0] ALUOP,
+    output reg [3:0] ALUOP,
    
 	 input wire CLK,
 	 input wire Reset 
@@ -77,7 +77,7 @@ module control_unit(
 //////////////////////////////
 //      Initialization      //
 //////////////////////////////	
-	always @ (current_state) begin
+	always @ (current_state, OPCODE, flagbit) begin
 		MemRead = 0;
 		MemWrite = 0; 
 		MemSrc = 0; 
@@ -114,7 +114,7 @@ module control_unit(
 				PCSrc = 3'b000;
 				MemWrite = 1'b0; 
 				MemDst = 3'b000;
-				InstWrite = 1'b1; 
+				InstWrite = 1'b0; 
 			end 
 	
 		Decode:
@@ -129,7 +129,7 @@ module control_unit(
 				RAWrite = 0; 
 				PCWrite = 0; 
 				SPWrite = 0; 
-				InstWrite = 0; 
+				InstWrite = 1; 
 				MarySrc = 0; 
 				ShelleySrc = 0;
 				RASrc = 0; 
@@ -478,7 +478,7 @@ module control_unit(
 
 
 //CASE 30: SHFR
-	if(OPCPDE == 5'b10010 && flagbit == 1'b0) begin 
+	if(OPCODE == 5'b10010 && flagbit == 1'b0) begin 
 		if(current_state == Third) begin 
 			SrcA = 1'b0; 
 			SrcB = 2'b01; 
@@ -494,7 +494,7 @@ module control_unit(
 
 //CASE 31: SHFR@
 	//?????????????????????
-	if(OPCPDE == 5'b10010 && flagbit == 1'b0) begin 
+	if(OPCODE == 5'b10010 && flagbit == 1'b0) begin 
 		if(current_state == Third) begin 
 			SrcA = 1'b0; 
 			SrcB = 2'b00; 
@@ -508,7 +508,7 @@ module control_unit(
 	end 
 	
 //CASE 30: SHFL
-	if(OPCPDE == 5'b10001 && flagbit == 1'b0) begin 
+	if(OPCODE == 5'b10001 && flagbit == 1'b0) begin 
 		if(current_state == Third) begin 
 			SrcA = 1'b0; 
 			SrcB = 2'b01;
@@ -525,7 +525,7 @@ module control_unit(
 //CASE 31: SHFL@
 	//?????????????????????
 	
-	if(OPCPDE == 5'b10001 && flagbit == 1'b1 ) begin 
+	if(OPCODE == 5'b10001 && flagbit == 1'b1 ) begin 
 			if(current_state == Third) begin 
 				SrcA = 1'b0; 
 				SrcB = 2'b00;
@@ -690,7 +690,7 @@ module control_unit(
 //  Next State Calculation  //
 //////////////////////////////
 	always @ (current_state, next_state, OPCODE) begin
-		$display("The current state is %d", current_state);
+		//$display("The current state is %d", current_state);
 		
 		//Fetch:
 		if(current_state == Fetch) begin
@@ -704,7 +704,12 @@ module control_unit(
 			//$display("In Decode, the next state is %d", next_state); 
 		end 
 		
-		if(current_state == Third) begin
+		if(current_state == Third && max_state == 0) begin
+			next_state = Fetch; 
+			//$display("In Three, the next state is %d", next_state); 
+		end
+		
+		if(current_state == Third && max_state == 1) begin
 			next_state = Fourth; 
 			//$display("In Three, the next state is %d", next_state); 
 		end
