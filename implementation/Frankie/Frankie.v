@@ -4,7 +4,26 @@ module Frankie(
 	input clock,
 	input reset
     );
-
+	
+	wire [15:0] inst_out;
+	wire MemWrite;
+	wire [1:0] MemSrc;
+	wire [2:0] MemDst;
+	wire [2:0] PCSrc;
+	wire [1:0] SPSrc;
+	wire PCWrite;
+	wire SPWrite;
+	wire InstWrite;
+	wire mary_write;
+	wire shelley_write;
+	wire comp_write;
+	wire ra_write;
+	wire [1:0] mary_src;
+	wire [1:0] shelley_src;
+	wire ra_src;
+	wire SrcA;
+	wire [1:0] SrcB;
+	wire [3:0] AluOp;
 
 ProcessorSansControl processor(
 		.clock(clock),
@@ -45,16 +64,16 @@ control_unit control(
 		.MemWrite(MemWrite),
 		.MemSrc(MemSrc),
 		.RegWrite(RegWrite),
-		.MaryWrite(MaryWrite),
-		.ShelleyWrite(ShelleyWrite),
-		.CompWrite(CompWrite),
-		.RAWrite(RAWrite),
+		.MaryWrite(mary_write),
+		.ShelleyWrite(shelley_write),
+		.CompWrite(comp_write),
+		.RAWrite(ra_write),
 		.PCWrite(PCWrite),
 		.SPWrite(SPWrite),
 		.InstWrite(InstWrite),
-		.MarySrc(MarySrc),
-		.ShelleySrc(ShelleySrc),
-		.RASrc(RASrc),
+		.MarySrc(mary_src),
+		.ShelleySrc(shelley_src),
+		.RASrc(ra_src),
 		.PCSrc(PCSrc),
 		.SPSrc(SPSrc),
 		.RegDst(RegDst),

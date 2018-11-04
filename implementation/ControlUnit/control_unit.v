@@ -17,7 +17,7 @@ module control_unit(
     input flagbit,
     output reg MemRead,
     output reg MemWrite,
-    output reg [2:0] MemSrc,
+    output reg [1:0] MemSrc,
     output reg RegWrite,
     output reg MaryWrite,
     output reg ShelleyWrite,
@@ -35,7 +35,7 @@ module control_unit(
 	 output reg [2:0] MemDst,
     output reg RegData,
     output reg SrcA,
-    output reg SrcB,
+    output reg [1:0] SrcB,
     output reg [3:0] ALUOP,
    
 	 input wire CLK,
@@ -183,6 +183,7 @@ module control_unit(
 				SPWrite = 1'b1;
 				SPSrc = 2'b01;
 				MemWrite = 1'b1; 
+				MemSrc = 2'b11;
 			end
 		end 
 
@@ -216,7 +217,7 @@ module control_unit(
 		if(OPCODE == 5'b00101) begin
 			if(current_state == Third) begin
 				MemWrite = 1'b0; 
-				MemDst = 3'b100; 
+				MemDst = 3'b110; 
 				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
@@ -231,7 +232,7 @@ module control_unit(
 		if(OPCODE == 5'b00110) begin
 			if(current_state == Third) begin 
 				MemWrite = 1'b0; 
-				MemDst = 3'b100;
+				MemDst = 3'b110;
 				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
@@ -512,7 +513,7 @@ module control_unit(
 		if(current_state == Third) begin 
 			SrcA = 1'b0; 
 			SrcB = 2'b01;
-			ALUOP = 4'b10000;
+			ALUOP = 4'b1000;
 			max_state = 1; 
 		end 
 		if(current_state == Fourth) begin 
@@ -529,7 +530,7 @@ module control_unit(
 			if(current_state == Third) begin 
 				SrcA = 1'b0; 
 				SrcB = 2'b00;
-				ALUOP = 4'b10000;
+				ALUOP = 4'b1000;
 				max_state = 1; 
 			end 
 			if(current_state == Fourth) begin 
@@ -629,7 +630,7 @@ module control_unit(
 			if(current_state == Third) begin 
 				MemWrite = 1'b0;
 				MemDst = 3'b001;
-				
+				max_state = 1;
 			end
 			if(current_state == Fourth) begin 
 				MaryWrite = 1'b1; 
@@ -642,6 +643,7 @@ module control_unit(
 			if(current_state == Third) begin 
 				MemWrite = 1'b0;
 				MemDst = 3'b011;
+				max_state = 1;
 			end 
 			if(current_state == Fourth) begin 
 				MaryWrite = 1'b1; 

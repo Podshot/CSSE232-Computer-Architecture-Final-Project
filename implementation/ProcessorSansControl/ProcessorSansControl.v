@@ -6,7 +6,7 @@ module ProcessorSansControl(
 	input [1:0] MemSrc,
 	input [2:0] MemDst,
 	input [2:0] PCSrc,
-	input [2:0] SPSrc,
+	input [1:0] SPSrc,
 	input PCWrite,
 	input SPWrite,
 	input InstWrite,
@@ -32,6 +32,7 @@ module ProcessorSansControl(
 	wire [15:0] ra;
 	wire [15:0] shelley;
 	wire [15:0] mary;
+	wire [15:0] sext_imm;
 	wire [15:0] sext_ls_imm;
 	wire [15:0] zext_imm;
 

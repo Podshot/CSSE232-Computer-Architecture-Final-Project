@@ -24,7 +24,7 @@ module pc_block(
 	input[15:0] immAddr,
 	input[15:0] ra,
 	input[15:0] mary,
-	input comp,
+	input [15:0] comp,
 	input pcWrite,
 	input reset,
 	output wire [15:0] pcOut

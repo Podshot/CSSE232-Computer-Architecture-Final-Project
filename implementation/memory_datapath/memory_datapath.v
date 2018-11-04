@@ -53,12 +53,15 @@ module memory_datapath(
             3'b011: begin // from shelley
                 mux_to_mem_addr = ShelleyData;
             end
-            3'b100: begin // from stack pointer + 2
-                mux_to_mem_addr = sp_in + 2'b10;
+            3'b100: begin // from stack pointer + 2, used for sput
+                mux_to_mem_addr = sp_in + 1;
             end
-            3'b101: begin // immediate left-shifted 2 + stack pointer
+            3'b101: begin // immediate left-shifted 2 + stack pointer, used for spek
                 mux_to_mem_addr = sp_in + ls_imm;
             end
+				3'b110: begin // from stack pointer, used for spop
+					mux_to_mem_addr = sp_in;
+				end
             default: begin
             end
         endcase        
@@ -73,6 +76,9 @@ module memory_datapath(
             2'b10: begin // from ra
                 mux_to_mem_data = RAData;
             end
+				2'b11: begin //from zext imm
+					mux_to_mem_data = ze_imm;
+				end
             default: begin
             end
         endcase
