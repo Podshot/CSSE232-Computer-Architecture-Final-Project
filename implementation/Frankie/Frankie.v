@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+//BEST PROCESSOR EVER BIG MIPS ENERGY
 
 module Frankie(
 	input clock,
