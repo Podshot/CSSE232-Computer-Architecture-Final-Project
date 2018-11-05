@@ -106,6 +106,7 @@ module control_unit(
 //////////////////////////////
 //    Fetch and Decode     //
 //////////////////////////////
+
 	case(current_state) 
 		
 		Fetch:
@@ -153,544 +154,531 @@ module control_unit(
 //////////////////////////////
 
 
-	
+	if (current_state == 2 || current_state == 3)
+	begin
 
-//////////////////////////////
-//     STACK OPERATIONS     //
-//////////////////////////////
-
-//CASE 1: APUT
-		if(OPCODE == 0 && flagbit == 0)begin
-			if(current_state == Third) begin 
+	case (OPCODE)
+		5'b00000: begin
+		case (flagbit)
+			0: //aput
+			begin
 				MaryWrite = 1'b1; 
 				MarySrc = 2'b11;
-			
-			end 
-		end
-
-//CASE 2: APUT@
-		if(OPCODE == 0 && flagbit == 1) begin
-			if(current_state == Third) begin 
+			end
+			1: //aput@
+			begin
 				ShelleyWrite = 1'b1; 
 				ShelleySrc = 2'b01; 
-			end 
-		end
-
-//CASE 3: SPUT
-		if(OPCODE == 5'b00001) begin
-			if(current_state == Third) begin 
-				MemDst = 3'b100; 
-				SPWrite = 1'b1;
-				SPSrc = 2'b01;
-				MemWrite = 1'b1; 
-				MemSrc = 2'b11;
 			end
-		end 
-
-//CASE 8: SPEK 
-		if(OPCODE == 5'b00100 && flagbit == 1'b0) begin
-			if(current_state == Third) begin
-				MemWrite = 1'b0; 
-				MemDst = 3'b101; 
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
-				MaryWrite = 1'b1;
-				MarySrc = 2'b00;
-			end
+			endcase
 		end
-		
-//CASE 43: SPEK 
-		if(OPCODE == 5'b00100 && flagbit == 1'b1) begin
-			if(current_state == Third) begin
-				MemWrite = 1'b0; 
-				MemDst = 3'b101; 
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
-				ShelleyWrite = 1'b1;
-				ShelleySrc = 2'b00;
-			end
+		5'b00001: //sput
+		begin
+			MemDst = 3'b100; 
+			SPWrite = 1'b1;
+			SPSrc = 2'b01;
+			MemWrite = 1'b1; 
+			MemSrc = 2'b11;
 		end
-	
-//CASE 9: SPOP
-		if(OPCODE == 5'b00101) begin
-			if(current_state == Third) begin
+		5'b00010: begin
+		case (flagbit)
+			0: //aadd
+				begin
+				case (current_state)
+					2: begin
+						SrcA = 1'b0;
+						SrcB = 2'b01;
+						ALUOP = 4'b0010;
+						max_state = 1;
+					end
+					3: begin
+						MaryWrite = 1'b1;  
+						MarySrc = 2'b01; 
+					end
+				endcase
+				end
+			1: //aadd@
+				begin
+				case (current_state)
+					2: begin
+						SrcA = 1'b0;
+						SrcB = 2'b00;
+						ALUOP = 4'b0010;
+						max_state = 1;
+					end
+					3: begin
+						MaryWrite = 1'b1;  
+						MarySrc = 2'b01; 
+					end
+				endcase
+				end
+			endcase
+		end
+		5'b00011: begin
+		case (flagbit)
+			0: //asub
+			begin
+				case (current_state)
+					2: begin
+						SrcA = 1'b0;
+						SrcB = 2'b01;
+						ALUOP = 4'b0011;
+						max_state = 1; 
+						end
+					3: begin
+						MaryWrite = 1'b1;  
+						MarySrc = 2'b01; 
+						end
+				endcase
+			end
+			1: //asub@
+			begin
+				case (current_state)
+					2: begin
+						SrcA = 1'b0;
+						SrcB = 2'b00;
+						ALUOP = 4'b0011;
+						max_state = 1; 
+					end
+					3: begin
+						MaryWrite = 1'b1;  
+						MarySrc = 2'b01; 
+					end
+				endcase
+			end
+			endcase
+			end
+		5'b00100: begin
+		case (flagbit)
+			0: //spek
+				begin
+				case (current_state)
+					2: begin
+						MemWrite = 1'b0; 
+						MemDst = 3'b101; 
+						max_state = 1; 
+						end
+					3: begin
+						MaryWrite = 1'b1;
+						MarySrc = 2'b00;
+						end
+				endcase
+				end
+			1: //spek@
+				begin
+				case (current_state)
+					2: begin
+						MemWrite = 1'b0; 
+						MemDst = 3'b101; 
+						max_state = 1; 
+						end
+					3: begin
+						ShelleyWrite = 1'b1;
+						ShelleySrc = 2'b00;
+						end
+				endcase
+				end
+			endcase
+			end
+		5'b00101: begin
+		case (current_state) //spop
+			2: begin
 				MemWrite = 1'b0; 
 				MemDst = 3'b110; 
 				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
+				end
+			3: begin
 				SPWrite = 1'b1; 
 				SPSrc = 2'b10; 
 				MaryWrite = 1'b1; 
 				MarySrc = 2'b00; 
+				end
+			endcase
 			end
-		end 
-
-//CASE 10: RPOP
-		if(OPCODE == 5'b00110) begin
-			if(current_state == Third) begin 
+		5'b00110: begin
+		case (current_state) //rpop
+			2: begin
 				MemWrite = 1'b0; 
-				MemDst = 3'b110;
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
+				MemDst = 3'b110; 
+				max_state = 1;
+				end
+			3: begin
 				SPWrite = 1'b1; 
-				SPSrc = 2'b10;
+				SPSrc = 2'b10; 
 				RAWrite = 1'b1; 
-				RASrc = 1'b0; 
-			end 
+				RASrc = 2'b00; 
+				end
+			endcase
 		end
-
-//CASE 36: BKAC 
-		if(OPCODE == 5'b10101 && flagbit == 0) begin
-			if(current_state == Third) begin 
+		5'b00111: begin
+		case (flagbit)
+			0: //jimm
+				begin
+				PCWrite = 1'b1;
+				PCSrc = 2'b10; 
+				end
+			1: //jimm@
+				begin
+				PCWrite = 1'b1;
+				PCSrc = 2'b01; 
+				end
+			endcase
+			end
+		5'b01000: begin
+		case (flagbit)
+			0: //jacc
+				begin
+				PCWrite = 1'b1;
+				PCSrc = 3'b100;
+				end
+			1: //jacc@
+				begin
+				PCWrite = 1'b1;
+				PCSrc = 3'b101;
+				end
+			endcase
+		end
+		5'b01001: begin
+		case (flagbit)
+			0: //jcmp
+				begin
+				PCWrite = 1'b1;
+				PCSrc = 3'b110; 
+				end
+			1: //jcmp@
+				begin
+				PCWrite = 1'b1;
+				PCSrc = 3'b111; 
+				end
+			endcase
+		end
+		5'b01010: //jret
+			begin
+			PCWrite = 1'b1;
+			PCSrc = 3'b011; 
+			end
+		5'b01011: begin
+		case (flagbit)
+			0: //jfnc
+				begin
+				RAWrite = 1'b1; 
+				RASrc = 1'b1; 
+				PCWrite = 1'b1;
+				PCSrc = 3'b010;
+				end
+			1: //jfnc@
+				begin
+				RAWrite = 1'b1; 
+				RASrc = 1'b1; 
+				PCWrite = 1'b1;
+				PCSrc = 3'b001; 
+				end
+			endcase
+		end
+		5'b01100: begin
+		case (flagbit)
+			0: begin
+			case (current_state) //cequ
+				2: begin
+					SrcA = 1'b0; 
+					SrcB = 2'b01; 
+					ALUOP = 4'b0110;
+					max_state = 1; 
+					end
+				3: begin
+					CompWrite = 1'b1; 
+					end
+				endcase
+			end
+			1: begin
+			case (current_state) //cequ@
+				2: begin
+					SrcA = 1'b0; 
+					SrcB = 2'b00; 
+					ALUOP = 4'b0110; 
+					max_state = 1;
+					end
+				3: begin
+					CompWrite = 1'b1; 
+					end
+				endcase
+			end
+			endcase
+		end
+		5'b01101: begin
+		case (flagbit)
+			0: begin
+			case (current_state) //cles
+				2: begin
+					SrcA = 1'b0;
+					SrcB = 2'b01; 
+					ALUOP = 4'b0100;
+					max_state = 1; 
+					end
+				3: begin
+					CompWrite = 1'b1;
+					end
+				endcase
+			end
+			1: begin
+			case (current_state) //cles@
+				2: begin
+					SrcA = 1'b0;
+					SrcB = 2'b00; 
+					ALUOP = 4'b0100;
+					max_state = 1; 
+					end
+				3: begin
+					CompWrite = 1'b1; 
+					end
+				endcase
+			end
+			endcase
+		end
+		5'b01110: begin
+		case (flagbit)
+			0: begin
+			case (current_state) //cgre
+				2: begin
+					SrcA = 1'b0;
+					SrcB = 2'b01; 
+					ALUOP = 4'b0101;
+					max_state = 1; 
+					end
+				3: begin
+					CompWrite = 1'b1; 
+					end
+				endcase
+			end
+			1: begin
+			case (current_state) //cgre@
+				2: begin
+					SrcA = 1'b0;
+					SrcB = 2'b00; 
+					ALUOP = 4'b0101;
+					max_state = 1; 
+					end
+				3: begin
+					CompWrite = 1'b1; 
+					end
+				endcase
+			end
+			endcase
+		end
+		5'b01111: begin
+		case (flagbit)
+			0: begin
+			case (current_state) //lorr
+				2: begin
+					SrcA = 1'b0; 
+					SrcB = 2'b01; 
+					ALUOP = 4'b0001;
+					max_state = 1; 
+					end
+				3: begin
+					MaryWrite = 1'b1; 
+					MarySrc = 2'b01; 
+					end
+				endcase
+			end
+			1: begin
+			case (current_state) //lorr@
+				2: begin
+					SrcA = 1'b0; 
+					SrcB = 2'b00; 
+					ALUOP = 4'b0001;
+					max_state = 1; 
+					end
+				3: begin
+					MaryWrite = 1'b1; 
+					MarySrc = 2'b01; 
+					end
+				endcase
+			end
+			endcase
+		end
+		5'b10000: begin
+		case (flagbit)
+			0: begin
+			case (current_state) //land
+				2: begin
+					SrcA = 1'b0; 
+					SrcB = 2'b01; 
+					ALUOP = 4'b0000;
+					max_state = 1; 
+					end
+				3: begin
+					MaryWrite = 1'b1; 
+					MarySrc = 2'b01; 
+					end
+				endcase
+			end
+			1: begin
+			case (current_state) //land@
+				2: begin
+					SrcA = 1'b0; 
+					SrcB = 2'b00; 
+					ALUOP = 4'b0000;
+					max_state = 1; 
+					end
+				3: begin
+					MaryWrite = 1'b1; 
+					MarySrc = 2'b01; 
+					end
+				endcase
+			end
+			endcase
+		end
+		5'b10001: begin
+		case (flagbit)
+			0: begin
+			case (current_state) //shfl
+				2: begin
+					SrcA = 1'b0; 
+					SrcB = 2'b01;
+					ALUOP = 4'b1000;
+					max_state = 1; 
+					end
+				3: begin
+					MaryWrite = 1'b1; 
+					MarySrc = 2'b01;
+					end
+				endcase
+			end
+			1: begin
+			case (current_state) //shfl@
+				2: begin
+					SrcA = 1'b0; 
+					SrcB = 2'b00;
+					ALUOP = 4'b1000;
+					max_state = 1; 
+					end
+				3: begin
+					MaryWrite = 1'b1; 
+					MarySrc = 2'b01;
+					end
+				endcase
+			end
+			endcase
+		end
+		5'b10010: begin
+		case (flagbit)
+			0: begin
+			case (current_state) //shfr
+				2: begin
+					SrcA = 1'b0; 
+					SrcB = 2'b01; 
+					ALUOP = 4'b1001;
+					max_state = 1; 
+					end
+				3: begin
+					MaryWrite = 1'b1; 
+					MarySrc = 2'b01; 
+					end
+				endcase
+			end
+			1: begin
+			case (current_state) //shfr@
+				2: begin
+					SrcA = 1'b0; 
+					SrcB = 2'b00; 
+					ALUOP = 4'b1001;
+					max_state = 1; 
+					end
+				3: begin
+					MaryWrite = 1'b1; 
+					MarySrc = 2'b01; 
+					end
+				endcase
+			end
+			endcase
+		end
+		5'b10011: begin
+		case (flagbit)
+			0: begin
+			case (current_state) //load
+				2: begin
+					MemWrite = 1'b0;
+					MemDst = 3'b001;
+					max_state = 1;
+					end
+				3: begin
+					MaryWrite = 1'b1; 
+					MarySrc = 2'b00; 
+					end
+				endcase
+			end
+			1: begin
+			case (current_state) //load@
+				2: begin
+					MemWrite = 1'b0;
+					MemDst = 3'b011;
+					max_state = 1;
+					end
+				3: begin
+					MaryWrite = 1'b1; 
+					MarySrc = 2'b00; 
+					end
+				endcase
+			end
+			endcase
+		end
+		5'b10100: begin
+		case (flagbit)
+			0: //stor
+				begin
+				MemWrite = 1'b1;
+				MemDst = 3'b001;
+				MarySrc = 2'b00;
+				end
+			1: //stor@
+				begin
+				MemWrite = 1'b1;
+				MemDst = 3'b011;
+				MarySrc = 2'b00;
+				end
+			endcase
+		end
+		5'b10101: begin
+		case (flagbit)
+			0: //bkac
+				begin
 				SPWrite = 1'b1;
 				SPSrc = 2'b01; 
 				MemWrite = 1'b1; 
 				MemDst = 3'b100; 
 				MemSrc = 2'b00; 
-			end 
-		end 
-
-//CASE 37: BKAC@
-		if(OPCODE == 5'b10101 && flagbit == 1) begin
-			if(current_state == Third) begin 
+				end
+			1: //bkac@
+				begin
 				SPWrite = 1'b1;
 				SPSrc = 2'b01; 
 				MemWrite = 1'b1; 
 				MemDst = 3'b100; 
 				MemSrc = 2'b01; 
-			end 
-		end 
-
-//CASE 38: BKRA
-		if(OPCODE == 5'b10110) begin
-			if(current_state == Third) begin
-				SPWrite = 1'b1;
-				SPSrc = 2'b01; 
-				MemWrite = 1'b1; 
-				MemDst = 3'b100; 
-				MemSrc = 2'b10; 
-			end 
-		end 
-		
-		
-//////////////////////////////
-//  ARITHMETIC OPERATIONS   //
-//////////////////////////////
-
-//CASE 4: AADD
-		if(OPCODE == 5'b00010 && flagbit == 0) begin
-			if(current_state == Third) begin 
-				SrcA = 1'b0;
-				SrcB = 2'b01;
-				ALUOP = 4'b0010;
-				max_state = 1; 
-			end
-			if(current_state == Fourth) begin 
-				MaryWrite = 1'b1;  
-				MarySrc = 2'b01; 
-			end
-		end 
-
-//CASE 5: AADD@
-		if(OPCODE == 5'b00010 && flagbit == 1) begin
-			if(current_state == Third) begin 
-				SrcA = 1'b0;
-				SrcB = 2'b00;
-				ALUOP = 4'b0010;
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin
-				MaryWrite = 1'b1;  
-				MarySrc = 2'b01; 
-			end
-		end 
- 
-
-//CASE 6: ASUB 
-		if(OPCODE == 5'b00011 && flagbit == 0) begin
-			if(current_state == Third) begin 
-				SrcA = 1'b0;
-				SrcB = 2'b01;
-				ALUOP = 4'b0011;
-				max_state = 1; 
-			end
-			if(current_state == Fourth) begin
-				MaryWrite = 1'b1;  
-				MarySrc = 2'b01; 
-			end
-		end 
-		
-//CASE 7: ASUB@
-		if(OPCODE == 5'b00011 && flagbit == 1) begin
-			if(current_state == Third) begin 
-				SrcA = 1'b0;
-				SrcB = 2'b00;
-				ALUOP = 4'b0011;
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
-				MaryWrite = 1'b1;  
-				MarySrc = 2'b01; 
-			end 
-		end 
-
-//////////////////////////////
-//      JUMP OPERATIONS     //
-//////////////////////////////
-
-//CASE 11: JIMM
-		if(OPCODE == 5'b00111 && flagbit == 0) begin
-			if(current_state == Third) begin 
-				PCWrite = 1'b1;
-				PCSrc = 2'b10; 
-			end
-		end 
-
-//CASE 12: JIMM@
-		if(OPCODE == 5'b00111 && flagbit == 1) begin
-			if(current_state == Third) begin 
-				PCWrite = 1'b1;
-				PCSrc = 2'b01; 
-			end 
-		end 
-
-//CASE 13: JACC 
-		if(OPCODE == 5'b01000 && flagbit == 0) begin
-			if(current_state == Third) begin 
-				PCWrite = 1'b1;
-				PCSrc = 3'b100;
-			end 
+				end
+			endcase
 		end
-
-//CASE 14: JACC@
-		if(OPCODE == 5'b01000 && flagbit == 1) begin
-			if(current_state == Third) begin 
-				PCWrite = 1'b1;
-				PCSrc = 3'b101;
-			end 
+		5'b10110: //bkra
+		begin
+			SPWrite = 1'b1;
+			SPSrc = 2'b01; 
+			MemWrite = 1'b1; 
+			MemDst = 3'b100; 
+			MemSrc = 2'b10; 
 		end
-
-//CASE 15: JCMP
-		if(OPCODE == 5'b01001 && flagbit == 0) begin
-			if(current_state == Third) begin 
-				PCWrite = 1'b1;
-				PCSrc = 3'b110; 
-			end 
-		end
-
-//CASE 16: JCMP@
-		if(OPCODE == 5'b01001 && flagbit == 1) begin
-			if(current_state == Third) begin 
-				PCWrite = 1'b1;
-				PCSrc = 3'b111; 
-			end 
-		end
-
-//CASE 17: JRET 
-		if(OPCODE == 5'b01010) begin
-			if(current_state == Third) begin 
-				PCWrite = 1'b1;
-				PCSrc = 3'b011; 
-			end 
-		end
-
-//CASE 18: JFNC
-		if(OPCODE == 5'b01011 && flagbit == 0) begin
-			if(current_state == Third) begin 
-				RAWrite = 1'b1; 
-				RASrc = 1'b1; 
-				PCWrite = 1'b1;
-				PCSrc = 3'b010;
-			end 
-		end
-	
-//CASE 19: JFNC@
-		if(OPCODE == 5'b01011 && flagbit == 1) begin
-			if(current_state == Third) begin 
-				RAWrite = 1'b1; 
-				RASrc = 1'b1; 
-				PCWrite = 1'b1;
-				PCSrc = 3'b001; 
-			end 
-		end
-	
-//////////////////////////////
-//    LOGICAL OPERATIONS    //
-//////////////////////////////
-
-//CASE 26: LORR 
-		if(OPCODE == 5'b01111 && flagbit == 0) begin
-			if(current_state == Third) begin 
-				SrcA = 1'b0; 
-				SrcB = 2'b01; 
-				ALUOP = 4'b0001;
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
-				MaryWrite = 1'b1; 
-				MarySrc = 2'b01; 
-			end 
-		end
-//CASE 27: LORR@
-		if(OPCODE == 5'b01111 && flagbit == 1) begin
-			if(current_state == Third) begin 
-				SrcA = 1'b0; 
-				SrcB = 2'b00; 
-				ALUOP = 4'b0001;
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
-				MaryWrite = 1'b1; 
-				MarySrc = 2'b01; 
-			end 
-		end
-
-//CASE 28: LAND 
-		if(OPCODE == 5'b10000 && flagbit == 0) begin
-			if(current_state == Third) begin 
-				SrcA = 1'b0; 
-				SrcB = 2'b01; 
-				ALUOP = 4'b0000;
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
-				MaryWrite = 1'b1; 
-				MarySrc = 2'b01; 
-			end 
-
-		end
-//CASE 29: LAND@
-		if(OPCODE == 5'b10000 && flagbit == 1) begin
-			if(current_state == Third) begin 
-				SrcA = 1'b0; 
-				SrcB = 2'b00; 
-				ALUOP = 4'b0000;
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
-				MaryWrite = 1'b1; 
-				MarySrc = 2'b01; 
-			end 
-		end
-
-
-//CASE 30: SHFR
-	if(OPCODE == 5'b10010 && flagbit == 1'b0) begin 
-		if(current_state == Third) begin 
-			SrcA = 1'b0; 
-			SrcB = 2'b01; 
-			ALUOP = 4'b1001;
-			max_state = 1; 
-		end 
-		if(current_state == Fourth) begin 
+		5'b10111: //swap
+		begin
 			MaryWrite = 1'b1; 
-			MarySrc = 2'b01; 
-		end 
-	end 
-			
-
-//CASE 31: SHFR@
-	//?????????????????????
-	if(OPCODE == 5'b10010 && flagbit == 1'b0) begin 
-		if(current_state == Third) begin 
-			SrcA = 1'b0; 
-			SrcB = 2'b00; 
-			ALUOP = 4'b1001;
-			max_state = 1; 
-		end 
-		if(current_state == Fourth) begin 
-			MaryWrite = 1'b1; 
-			MarySrc = 2'b01; 
-		end 
-	end 
+			MarySrc = 2'b10; 
+			ShelleyWrite = 1'b1; 
+			ShelleySrc = 2'b10;
+		end
+	endcase
 	
-//CASE 30: SHFL
-	if(OPCODE == 5'b10001 && flagbit == 1'b0) begin 
-		if(current_state == Third) begin 
-			SrcA = 1'b0; 
-			SrcB = 2'b01;
-			ALUOP = 4'b1000;
-			max_state = 1; 
-		end 
-		if(current_state == Fourth) begin 
-			MaryWrite = 1'b1; 
-			MarySrc = 2'b01;
-		end 
-	end 
-			
-
-//CASE 31: SHFL@
-	//?????????????????????
-	
-	if(OPCODE == 5'b10001 && flagbit == 1'b1 ) begin 
-			if(current_state == Third) begin 
-				SrcA = 1'b0; 
-				SrcB = 2'b00;
-				ALUOP = 4'b1000;
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
-				MaryWrite = 1'b1; 
-				MarySrc = 2'b01;
-			end 
-		end 
-
-//////////////////////////////
-//  COMPARISON OPERATIONS   //
-//////////////////////////////
-
-//CASE 20: CEQU
-		if(OPCODE == 5'b01100 && flagbit == 0) begin
-			if(current_state == Third) begin 
-				SrcA = 1'b0; 
-				SrcB = 2'b01; 
-				ALUOP = 4'b0110;
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
-				CompWrite = 1'b1; 
-			end 
-		end
-
-//CASE 21: CEQU@
-		if(OPCODE == 5'b01100 && flagbit == 1) begin
-			if(current_state == Third) begin 
-				SrcA = 1'b0; 
-				SrcB = 2'b00; 
-				ALUOP = 4'b0110; 
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
-				CompWrite = 1'b1; 
-			end 
-		end
-
-//CASE 22: CLES 
-		if(OPCODE == 5'b01101 && flagbit == 0) begin
-			if(current_state == Third) begin 
-				SrcA = 1'b0;
-				SrcB = 2'b01; 
-				ALUOP = 4'b0100;
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
-				CompWrite = 1'b1;
-			end 
-		end
-
-//CASE 23: CLES@
-		if(OPCODE == 5'b01101 && flagbit == 1) begin
-			if(current_state == Third) begin 
-				SrcA = 1'b0;
-				SrcB = 2'b00; 
-				ALUOP = 4'b0100;
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
-				CompWrite = 1'b1; 
-			end 
-		end
-
-//CASE 24: CGRE
-		if(OPCODE == 5'b01110 && flagbit == 0) begin
-			if(current_state == Third) begin 
-				SrcA = 1'b0;
-				SrcB = 2'b01; 
-				ALUOP = 4'b0101;
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
-				CompWrite = 1'b1; 
-			end 
-		end
-
-//CASE 25: CGRE@	 
-		if(OPCODE == 5'b01110 && flagbit == 1) begin
-			if(current_state == Third) begin 
-				SrcA = 1'b0;
-				SrcB = 2'b00; 
-				ALUOP = 4'b0101;
-				max_state = 1; 
-			end 
-			if(current_state == Fourth) begin 
-				CompWrite = 1'b1; 
-			end 
-		end
-
-//////////////////////////////
-//  LOAD/STORE OPERATIONS   //
-//////////////////////////////
-
-//CASE 32: LOAD 
-		if(OPCODE == 5'b10011 && flagbit == 0) begin
-			if(current_state == Third) begin 
-				MemWrite = 1'b0;
-				MemDst = 3'b001;
-				max_state = 1;
-			end
-			if(current_state == Fourth) begin 
-				MaryWrite = 1'b1; 
-				MarySrc = 2'b00; 
-			end
-		end
-
-//CASE 33: LOAD@
-		if(OPCODE == 5'b10011 && flagbit == 1) begin
-			if(current_state == Third) begin 
-				MemWrite = 1'b0;
-				MemDst = 3'b011;
-				max_state = 1;
-			end 
-			if(current_state == Fourth) begin 
-				MaryWrite = 1'b1; 
-				MarySrc = 2'b00; 
-			end 
-		end
-
-//CASE 34: STOR
-		if(OPCODE == 5'b10100 && flagbit == 0) begin
-			if(current_state == Third) begin 
-				MemWrite = 1'b1;
-				MemDst = 3'b001;
-				MarySrc = 2'b00;
-			end 
-		end
-		
-//CASE 35: STOR@
-		if(OPCODE == 5'b10100 && flagbit == 1) begin
-			if(current_state == Third) begin 
-				MemWrite = 1'b1;
-				MemDst = 3'b011;
-				MarySrc = 2'b00;
-			end
-		end 
-
-
-//////////////////////////////
-//      SWAP OPERATIONS     //
-//////////////////////////////
-
-//CASE 39: SWAP
-		if(OPCODE == 5'b10111) begin
-			if(current_state == Third) begin 
-				MaryWrite = 1'b1; 
-				MarySrc = 2'b10; 
-				ShelleyWrite = 1'b1; 
-				ShelleySrc = 2'b10;
-			end
-		end 
-		
-		
 	end
-		
-		
-//////////////////////////////
-//  Next State Calculation  //
-//////////////////////////////
+	end
+	
 	always @ (current_state, next_state, OPCODE) begin
 		//$display("The current state is %d", current_state);
 		
@@ -720,12 +708,6 @@ module control_unit(
 			next_state = Fetch; 
 			//$display("In Four, the next state is %d", next_state); 
 		end 
-		
-	
-		
-
-			
 	end
-		
 		
 endmodule

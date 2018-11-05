@@ -247,7 +247,7 @@ module contro_unit_test;
 		OPCODE = 5;
 		flagbit = 1;
 		#8; //finish cycle 2
-		if(MemWrite == 1'b0 && MemDst == 3'b100)
+		if(MemWrite == 1'b0 && MemDst == 3'b110)
 			$display("Testing SPOP cycle 3 Passed");
 		else 
 			$display("Testing SPOP cycle 3 Failed");
