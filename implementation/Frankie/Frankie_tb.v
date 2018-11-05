@@ -66,6 +66,12 @@ module Frankie_tb;
 		for(i=0;i<14;i=i+1) begin
 			#40;
 		end //value in mary should be 10, shelley should be 2, mem[1] should be 10
+		
+		//test function add
+		for (i=0;i<23;i=i+1) begin
+			#40;
+		end
+		// We expect mary to equal 7 and shelley to be 2 and sp to be 0
 		$finish;
 	end
       

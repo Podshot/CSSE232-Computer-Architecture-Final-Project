@@ -40,6 +40,17 @@ module memory(
 			main_memory[17] = 16'b1000000000001000; //aput@ 5
 			main_memory[18] = 16'b1100110000000100; //load@
 			main_memory[19] = 16'b0101000000000100; //stor 1
+			
+			// Add Function
+			main_memory[20] = 16'b0101100000000000; //bkra
+			main_memory[21] = 16'b0000000000010100; //aput 5
+			main_memory[22] = 16'b1000000000001000; //aput@ 2
+			main_memory[23] = 16'b0010111000000000; //jfnc add
+			main_memory[24] = 16'b0001100000000000; //rpop
+			
+			main_memory[129] = 16'b100010000000000; //aadd@
+			main_memory[130] = 16'b001010000000000; //jret
+			
 		end
 		else if (MemWrite == 1'b1) 
 		begin
