@@ -22,6 +22,7 @@ module pc_block(
 	input clock,
 	input [2:0] pcSrc,
 	input[15:0] immAddr,
+	input[15:0] se_immAddr,
 	input[15:0] ra,
 	input[15:0] mary,
 	input [15:0] comp,
@@ -48,13 +49,13 @@ module pc_block(
 		case( pcSrc )
 	 //adder is just + in verilog
 			 3'b000 : muxOut = pcOut + 1;
-			 3'b001 : muxOut = immAddr + pcOut;
+			 3'b001 : muxOut = se_immAddr + pcOut;
 			 3'b010 : muxOut = immAddr;
 			 3'b011 : muxOut = ra;
 			 3'b100 : muxOut = mary;
 			 3'b101 : muxOut = (mary << 4) + pcOut;
 			 3'b110 : muxOut = immAddr;
-			 3'b111 : muxOut = (immAddr << 4);
+			 3'b111 : muxOut = (se_immAddr + pcOut);
 		endcase
 	end
 	

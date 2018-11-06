@@ -315,12 +315,12 @@ module control_unit(
 			0: //jimm
 				begin
 				PCWrite = 1'b1;
-				PCSrc = 2'b10; 
+				PCSrc = 3'b010; 
 				end
 			1: //jimm@
 				begin
 				PCWrite = 1'b1;
-				PCSrc = 2'b01; 
+				PCSrc = 3'b001; 
 				end
 			endcase
 			end

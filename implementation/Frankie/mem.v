@@ -59,16 +59,18 @@ module memory(
 			// swap mary (7) and shelley (2)
 			main_memory[25] = 16'b0101110000000000;
 			
-			// loop to sum 0 thriugh 10
+			// loop to sum 0 through 10
 			main_memory[26] = 16'b0000000000000000; //aput 0
-			main_memory[27] = 16'b1000000000000100; //aput@ 1
-			main_memory[28] = 16'b0011100000101000; //cgre 0 10
-			main_memory[29] = 16'b0010010000101000; //jcmp 0 exit
-			main_memory[30] = 16'b0101110000000000; //swap
+			main_memory[27] = 16'b1000000000000000; //aput@ 0
+			main_memory[28] = 16'b0101110000000000; //swap
+			main_memory[29] = 16'b0011100000100100; //cgre 9
+			main_memory[30] = 16'b0010010010001100; //jcmp exit
 			main_memory[31] = 16'b0000100000000100; //aadd 1
 			main_memory[32] = 16'b0101110000000000; //swap
-			main_memory[33] = 16'b0000100000000100; //aadd 0 1
-			main_memory[34] = 16'b1000000000000100; //jimm -6
+			main_memory[33] = 16'b1000100000000000; //aadd@
+			main_memory[34] = 16'b1001111111100100; //jimm@ -6
+			
+			//EUCLID'S LET'S GO BOIIIIIIIIII
 			
 		end
 		else if (MemWrite == 1'b1) 

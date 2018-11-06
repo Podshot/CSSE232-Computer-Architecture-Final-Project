@@ -80,10 +80,10 @@ module Frankie_tb;
 		// We expect to finish with mary = 2 and shelley = 7
 		
 		//test summation
-		for (i = 0; i < 12; i = i + 1) begin
-			#40;
+		for (i=0;i<256;i=i+1) begin
+			#40; //256
 		end
-		// We expect to finish with mary = 2 and shelley = 7
+		// end: mary=55, shelley=10, comp=1
 
 		$finish;
 	end

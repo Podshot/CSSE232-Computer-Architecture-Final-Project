@@ -43,6 +43,7 @@ PCSPandMemoryBlock PCSPandMemoryBlock(
 	.MemDst(MemDst),
 	.ze_imm(zext_imm),
 	.ls_imm(sext_ls_imm),
+	.se_imm(sext_imm),
 	.MaryData(mary),
 	.ShelleyData(shelley),
 	.RAData(ra),
