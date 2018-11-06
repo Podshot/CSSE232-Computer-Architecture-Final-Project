@@ -70,7 +70,46 @@ module memory(
 			main_memory[33] = 16'b1000100000000000; //aadd@
 			main_memory[34] = 16'b1001111111100100; //jimm@ -6
 			
-			//EUCLID'S LET'S GO BOIIIIIIIIII
+			//GCD
+			main_memory[35] = 16'b0111110000000000; //GCD: converted to noop
+			main_memory[36] = 16'b0001010000000000; //spop
+			main_memory[37] = 16'b0011000000000100; //cequ 1
+			main_memory[38] = 16'b0101110000000000; //swap
+			main_memory[39] = 16'b0010010011010000; //jcmp ENDgcd (52)
+			main_memory[40] = 16'b0111110000000000; //LOOPgcd:
+			main_memory[41] = 16'b0010010011001000; //jcmp ENDswap (50)
+			main_memory[42] = 16'b0011010000000100; //cles 1
+			main_memory[43] = 16'b0010010011000000; //jcmp ELSEgcd (48)
+			main_memory[44] = 16'b0101110000000000; //swap
+			main_memory[45] = 16'b1000110000000000; //asub@
+			main_memory[46] = 16'b0101110000000000; //swap
+			main_memory[47] = 16'b0001110010100000; //jimm LOOPgcd (40)
+			main_memory[48] = 16'b0111110000000000; //ELSEgcd: converted to noop
+			main_memory[49] = 16'b0001110010100000; //jimm LOOPgcd (40)
+			main_memory[50] = 16'b0111110000000000; //ENDswap: converted to noop
+			main_memory[51] = 16'b0101110000000000; //swap
+			main_memory[52] = 16'b0111110000000000; //ENDgcd: converted to noop
+			main_memory[53] = 16'b0111110000000000; //GCD: converted to noop
+			main_memory[54] = 16'b0010100000000000; //jret
+			
+			// relPrime
+			main_memory[55] = 16'b0111110000000000; //main:
+			main_memory[56] = 16'b0101100000000000; //bkra
+			main_memory[57] = 16'b0000010000000110; //sput nVal (6 right now)
+			main_memory[58] = 16'b0000000000000000; //aput 2
+			main_memory[59] = 16'b0101110000000000; //swap
+			main_memory[60] = 16'b0111110000000000; //LOOPrp:
+			main_memory[61] = 16'b0010110010001100; //jfnc GCD (35)
+			main_memory[62] = 16'b0011000000000100; //cequ 1
+			main_memory[63] = 16'b0010010100010000; //jcmp ENDrp (68)
+			main_memory[64] = 16'b0101110000000000; //swap
+			main_memory[65] = 16'b0000000000000100; //aadd 1
+			main_memory[66] = 16'b0101110000000000; //swap
+			main_memory[67] = 16'b0001110011110000; //jimm LOOPrp (60)
+			main_memory[68] = 16'b0111110000000000; //ENDrp: convereted to noop
+			main_memory[69] = 16'b0101110000000000; //swap
+			main_memory[70] = 16'b0001100000000000; //rpop
+			main_memory[71] = 16'b0010100000000000; //jret
 			
 		end
 		else if (MemWrite == 1'b1) 

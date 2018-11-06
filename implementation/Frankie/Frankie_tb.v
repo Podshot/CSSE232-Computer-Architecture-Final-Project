@@ -84,6 +84,12 @@ module Frankie_tb;
 			#40; //256
 		end
 		// end: mary=55, shelley=10, comp=1
+		
+		//test just gcd
+		for (i = 0; i < 20; i = i + 1) begin
+			#40;
+		end
+		// We expect mary to hold 5
 
 		$finish;
 	end
