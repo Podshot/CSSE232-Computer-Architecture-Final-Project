@@ -35,7 +35,7 @@ module PCSPandMemoryBlock_tbJoy;
 	reg [15:0] ShelleyData;
 	reg [15:0] RAData;
 	reg [15:0] CompData;
-	reg [2:0] PCSrc;
+	reg [3:0] PCSrc;
 	reg [2:0] SPSrc;
 	reg PCWrite;
 	reg SPWrite;
@@ -135,17 +135,18 @@ module PCSPandMemoryBlock_tbJoy;
 		SPWrite = 1;
 		PCReset = 1;
 		SPReset = 1;
-		#50;
+		#60;
 		
+		/*
 		// Test 1
 		// Write x to sp + 2 in mem for 0 <= x <= 15
 		// Checks right after writing; next test will check that vals remain
 		MemDst = 4;
 		MemSrc = 1;
 		SPReset = 0;
-		#50;
+		#60;
 		
-		for (i = 0; i < 15; i = i+1) begin
+		for (i = 0; i <= 15; i = i+1) begin
 			MemWrite = 1;
 			// Put 100 into shelley; it will go from shelley into mem
 			ShelleyData = i;
@@ -156,33 +157,66 @@ module PCSPandMemoryBlock_tbJoy;
 			#50;
 			// MemVal_out is last set val in mem if nothing else requested, so it will be what we just put in
 			if (MemVal_out == i && sp_out == 2 * i)
-				$display("PASSED test %d", i);
+				$display("PASSED test 1 part %d", i);
 			else
-				$display("FAILED test %d: sp was %d and memVal was %d", i, sp_out, MemVal_out);
+				$display("FAILED test 1 part  %d: sp was %d and memVal was %d", i, sp_out, MemVal_out);
 			SPSrc = 1;
 			#20;
 			SPSrc = 0;
+			#20;
 		end
 			
 			
 		// Test 2
-		// Write 200 to sp - 2 in mem
-		#50;
-		MemWrite = 1;
-		// set memDst to sp + 2
-		MemDst = 4;
-		// Put 100 into shelley; it will go from shelley into mem
-		ShelleyData = 100;
-		MemSrc = 1;
-		#50;
-		// Set memWrite to 0 so it will start outputting again
+		// Read vals written in Test 1 going backward
+		#20;
 		MemWrite = 0;
-		//Read from memory at address = sp + 2 (i.e. 2)
-		#50;
-		if (MemVal_out == 100 && sp_out == 0)
-			$display("PASSED test 1");
-		else
-			$display("FAILED test 1");
+		// Must decrement sp once before beginning to make up for extra increment at end of test 1
+		SPSrc = 2;
+		#20;
+		SPSrc = 0;
+		for (i = 0; i <= 15; i = i+1) begin
+			#20;
+			if (MemVal_out == 15 - i && sp_out == 30 - (2 * i))
+				$display("PASSED test 2 part %d", i);
+			else
+				$display("FAILED test 2 part %d: sp was %d and memVal was %d", i, sp_out, MemVal_out);
+			#20;
+			SPSrc = 2;
+			#20;
+			SPSrc = 0;
+		end
+		*/
+		
+		// Test 3
+		// Write vals 0 to 15 for pc = 30 to 30 + 14
+		MemDst = 0;
+		MemSrc = 1;
+		PCReset = 0;
+		SPWrite = 0;
+		PCWrite = 1;
+		PCSrc = 2;
+		ze_imm = 30;
+		#60
+		for (i = 0; i <= 15; i = i+1) begin
+			MemWrite = 1;
+			// Put 100 into shelley; it will go from shelley into mem
+			ShelleyData = i;
+			#50;
+			// Set memWrite to 0 so it will start outputting again
+			MemWrite = 0;
+			//Read from memory at address = sp + 2 (i.e. 2)
+			#50;
+			// MemVal_out is last set val in mem if nothing else requested, so it will be what we just put in
+			if (MemVal_out == i && pc_out == 32 + 2 * i)
+				$display("PASSED test 3 part %d", i);
+			else
+				$display("FAILED test 3 part  %d: pc was %d and memVal was %d", i, pc_out, MemVal_out);
+			PCSrc = 0;
+			#20;
+			PCSrc = 7;
+		end
+		
 	end
       
 endmodule

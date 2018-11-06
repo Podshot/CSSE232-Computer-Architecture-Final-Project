@@ -78,6 +78,8 @@ module alu(
 			AluOut = sgt;
 		4'b0110: //setequalto
 			AluOut = seq;
+		4'b0111: //shelley
+			AluOut = B;
 		4'b1000: //left shift
 			AluOut = A << B;
 		4'b1001: //right shift

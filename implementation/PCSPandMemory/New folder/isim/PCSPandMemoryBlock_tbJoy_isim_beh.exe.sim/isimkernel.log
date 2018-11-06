@@ -1,0 +1,28 @@
+Command line:
+   PCSPandMemoryBlock_tbJoy_isim_beh.exe
+     -simmode  gui
+     -simrunnum  0
+     -socket  58494
+
+Wed Oct 31 15:02:44 2018
+
+
+ Elaboration Time: 0.1875 sec
+
+ Current Memory Usage: 6144.98 Meg
+
+ Total Signals          : 97
+ Total Nets             : 354
+ Total Signal Drivers   : 38
+ Total Blocks           : 11
+ Total Primitive Blocks : 6
+ Total Processes        : 53
+ Total Traceable Variables  : 54
+ Total Scalar Nets and Variables : 66407
+
+ Total Simulation Time: 0.1875 sec
+
+ Current Memory Usage: 6144.98 Meg
+
+Wed Oct 31 15:03:06 2018
+

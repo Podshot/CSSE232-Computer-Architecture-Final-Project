@@ -30,7 +30,7 @@ module RegBlock(
 	//comp always takes aluout in, so it needs no mux register
 	reg [15:0] ra_in;
 	
-	always @ *
+	always @ (memval, aluout, shelley_out, immediate, mary_out, pc, mary_src, shelley_src, ra_src)
 	begin
 		//the following case statements simulate muxes
 		//and decide which data gets written to the regs
@@ -49,7 +49,7 @@ module RegBlock(
 		
 		case(ra_src)
 			1'b0: ra_in = memval;
-			1'b1: ra_in = pc+2;
+			1'b1: ra_in = pc;
 		endcase
 	end
 	

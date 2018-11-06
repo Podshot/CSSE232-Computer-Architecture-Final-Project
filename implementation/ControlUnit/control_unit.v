@@ -669,10 +669,26 @@ module control_unit(
 		end
 		5'b10111: //swap
 		begin
-			MaryWrite = 1'b1; 
-			MarySrc = 2'b10; 
-			ShelleyWrite = 1'b1; 
-			ShelleySrc = 2'b10;
+		/*
+			case (current_state)
+			2: begin
+				ShelleyWrite = 1'b1; 
+				ShelleySrc = 2'b10;
+				ALUOP = 4'b0100;
+				SrcA = 1'b0;
+				SrcB = 2'b00;
+				max_state = 1;
+				end
+			3: begin
+				MaryWrite = 1'b1; 
+				MarySrc = 2'b01; 
+				end
+			endcase
+		*/
+		MaryWrite = 1'b1;
+		MarySrc = 2'b10;
+		ShelleyWrite = 1'b1;
+		ShelleySrc = 2'b10;
 		end
 	endcase
 	
