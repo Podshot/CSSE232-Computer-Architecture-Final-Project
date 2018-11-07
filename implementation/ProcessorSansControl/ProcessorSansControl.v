@@ -21,6 +21,8 @@ module ProcessorSansControl(
 	input SrcA,
 	input [1:0] SrcB,
 	input [3:0] AluOp,
+	input [15:0] io_in,
+	output [15:0] io_out,
 	output overflow_output,
 	output [15:0] instruction
    );
@@ -35,10 +37,35 @@ module ProcessorSansControl(
 	wire [15:0] sext_imm;
 	wire [15:0] sext_ls_imm;
 	wire [15:0] zext_imm;
+	
+	reg [15:0] out_reg;
+	reg new_MemWrite;
+	reg [15:0] new_MaryData;
+	
+	always @* begin
+		new_MemWrite = MemWrite;
+		new_MaryData = mary;
+		$display("[PCSP]: MemWrite: %b, MemDst: %b, ze_imm: %b", MemWrite, MemDst, zext_imm);
+		if (instruction[14:10] == 5'b10100 && MemWrite == 1 && MemDst == 1 && zext_imm == 255) begin
+			out_reg <= mary;
+			new_MemWrite = 1'b0;
+			$display("[PCSP]: Write to IO -> %b", mary);
+			$display("[PCSP]: out_reg: %b", out_reg);
+		end
+		else if (instruction[14:10] == 5'b10111 && MemWrite == 0 && MemDst == 0 && zext_imm == 255) begin
+			$display("[PCSP]: Read from IO");
+			new_MaryData = io_in;
+		end
+		else begin
+			out_reg <= 0;
+		end
+	end
+	
+	assign io_out = out_reg;
 
 PCSPandMemoryBlock PCSPandMemoryBlock(
 	.clock(clock),
-	.MemWrite(MemWrite),
+	.MemWrite(new_MemWrite),
 	.MemSrc(MemSrc),
 	.MemDst(MemDst),
 	.ze_imm(zext_imm),

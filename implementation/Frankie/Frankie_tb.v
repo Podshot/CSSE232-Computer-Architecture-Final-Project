@@ -5,6 +5,9 @@ module Frankie_tb;
 	// Inputs
 	reg clock;
 	reg reset;
+	reg [15:0] io_in;
+	reg [15:0] io_out;
+	
 	
 	
 	integer i;
@@ -12,7 +15,9 @@ module Frankie_tb;
 	// Instantiate the Unit Under Test (UUT)
 	Frankie uut (
 		.clock(clock), 
-		.reset(reset)
+		.reset(reset),
+		.io_in(io_in),
+		.io_out(io_out)
 	);
 	
 	always begin
@@ -24,10 +29,12 @@ module Frankie_tb;
 		// Initialize Inputs
 		clock = 0;
 		reset = 1;
+		io_in = 0;
 
 		#100;
 		reset = 0;
 
+		/*
 		//test add
 		#30; //get mem_out, increment pc
 		#40; //put mem_out into inst, calculate control bits
@@ -46,12 +53,20 @@ module Frankie_tb;
 		#40; //put mem_out into inst, calculate control bits
 		#40; //add mary and shelley
 		#40; //put aluout into mary; mary should be 12
+		*/
 		
 		//test sub
-		for(i=0;i<14;i=i+1) begin
+		//test write io
+		for(i=0;i<7;i=i+1) begin
 			#40;
 		end //value in mary should be 0, shelley should be 3
 		
+		io_in = 16;
+		for(i=0;i<3;i=i+1) begin
+			#40; // test read IO
+		end
+		
+		/*
 		//test big immediate
 		for(i=0;i<11;i=i+1) begin
 			#40;

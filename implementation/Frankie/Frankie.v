@@ -3,7 +3,9 @@
 
 module Frankie(
 	input clock,
-	input reset
+	input reset,
+	input [15:0] io_in,
+	output [15:0] io_out
     );
 	
 	wire [15:0] inst_out;
@@ -47,6 +49,8 @@ ProcessorSansControl processor(
 		.SrcA(SrcA),
 		.SrcB(SrcB),
 		.AluOp(AluOp),
+		.io_in(io_in),
+		.io_out(io_out),
 		.overflow_output(overflow),
 		.instruction(inst_out)
 	);
