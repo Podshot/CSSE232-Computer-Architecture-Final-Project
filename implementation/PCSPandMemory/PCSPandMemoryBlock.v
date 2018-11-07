@@ -18,11 +18,44 @@ module PCSPandMemoryBlock(
 	 input SPWrite,
 	 input InstWrite,
 	 input reset,
-	 output [15:0] mem_out,
+	 input [15:0] io_in,
+	 output [15:0] io_out,
+	 output [15:0] mem_data_out,
 	 output [15:0] Inst_out,
 	 output [15:0] pc_out,
 	 output [15:0] sp_out
 	 );
+	 
+	 wire [15:0] mem_out;
+	 reg [15:0] io_in_reg;
+	 reg [15:0] io_out_reg = 0;
+	 
+	 always @ (ze_imm, MemWrite) begin
+		case (ze_imm)
+			255: begin
+				case (MemWrite)
+					1'b0: begin // IO Read
+						$display("[PCSP][%0d]: IO Read", pc_out);
+						io_in_reg = io_in;
+					end
+					1'b1: begin // IO Write
+						$display("[PCSP][%0d]: IO Write", pc_out);
+						$display("[PCSP][%0d]: MaryData = %b", pc_out, MaryData);
+						io_out_reg = MaryData;
+					end
+					default: begin
+						io_in_reg = mem_out;
+					end
+				endcase
+			end
+			default: begin
+				$display("[PCSP][%0d]: Not Reding/Writing IO", pc_out);
+			end
+		endcase
+	 end
+	 
+	 assign mem_data_out = io_in_reg;
+	 assign io_out = io_out_reg;
 	
 pc_block pc_block(
 		.clock(clock),
