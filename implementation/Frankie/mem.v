@@ -7,7 +7,7 @@ module memory(
 	input reset
 	);
 	
-	reg [15:0] main_memory [256:0];
+	reg [15:0] main_memory [511:0];
 	reg [15:0] internal_mem_val;
 	
 	
@@ -15,8 +15,9 @@ module memory(
 	begin
 		if (reset == 1'b1)
 		begin
-			//$readmemb("test_basic_ops.mem", main_memory); //why this no work :((((
-			$readmemb("test_io_ops.mem", main_memory);
+//			$readmemb("test_basic_ops.mem", main_memory);
+			//$readmemb("test_io_ops.mem", main_memory);
+			$readmemb("euclidscomplete.txt", main_memory);
 			
 			// 2 + 5
 //			/*main_memory[0] = 16'b0000000000001000; //aput 2
@@ -75,7 +76,7 @@ module memory(
 //			main_memory[35] = 16'b0101001111111100;
 //			// Trigger read from IO
 //			main_memory[36] = 16'b0101111111111100;*/
-			
+/*			
 			//GCD
 			main_memory[35] = 16'b0111110000000000; //GCD: converted to noop
 			main_memory[36] = 16'b0001010000000000; //spop
@@ -116,7 +117,7 @@ module memory(
 			main_memory[69] = 16'b0101110000000000; //swap
 			main_memory[70] = 16'b0001100000000000; //rpop
 			main_memory[71] = 16'b0010100000000000; //jret
-			
+*/			
 		end
 		else if (MemWrite == 1'b1) 
 		begin

@@ -55,6 +55,9 @@ module Frankie_tb;
 		#40; //put aluout into mary; mary should be 12
 		*/
 		
+		
+		#4000;
+		/*
 		//test sub
 		//test write io
 		for(i=0;i<7;i=i+1) begin
@@ -66,7 +69,6 @@ module Frankie_tb;
 			#40; // test read IO
 		end
 		
-		/*
 		//test big immediate
 		for(i=0;i<11;i=i+1) begin
 			#40;
@@ -107,6 +109,7 @@ module Frankie_tb;
 		// We expect mary to hold 5
 
 		$finish;
+		*/
 	end
       
 endmodule
