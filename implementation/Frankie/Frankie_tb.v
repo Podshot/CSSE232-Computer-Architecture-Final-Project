@@ -6,7 +6,9 @@ module Frankie_tb;
 	reg clock;
 	reg reset;
 	reg [15:0] io_in;
-	reg [15:0] io_out;
+	
+	// Outputs
+	wire [15:0] io_out;
 	
 	
 	

@@ -27,29 +27,26 @@ module PCSPandMemoryBlock(
 	 );
 	 
 	 wire [15:0] mem_out;
+	 reg [15:0] new_MemWrite;
 	 reg [15:0] io_in_reg;
-	 reg [15:0] io_out_reg = 0;
+	 reg [15:0] io_out_reg;
 	 
-	 always @ (ze_imm, MemWrite) begin
+	 always @ (ze_imm, MemWrite, io_in, MaryData, mem_out) begin
 		case (ze_imm)
 			255: begin
 				case (MemWrite)
-					1'b0: begin // IO Read
-						$display("[PCSP][%0d]: IO Read", pc_out);
+					1'b0: begin // IO Read - Working!
 						io_in_reg = io_in;
 					end
-					1'b1: begin // IO Write
-						$display("[PCSP][%0d]: IO Write", pc_out);
-						$display("[PCSP][%0d]: MaryData = %b", pc_out, MaryData);
+					1'b1: begin // IO Write - Working!
 						io_out_reg = MaryData;
-					end
-					default: begin
-						io_in_reg = mem_out;
+						new_MemWrite = 1'b0;
 					end
 				endcase
 			end
 			default: begin
-				$display("[PCSP][%0d]: Not Reding/Writing IO", pc_out);
+				io_in_reg = mem_out;
+				new_MemWrite = MemWrite;
 			end
 		endcase
 	 end
@@ -80,7 +77,7 @@ sp_block sp_block(
 
 memory_datapath memory_datapath(
 		.clock(clock),
-		.MemWrite(MemWrite),
+		.MemWrite(new_MemWrite),
 		.MemSrc(MemSrc),
 		.MemDst(MemDst),
 		.pc(pc_out),
