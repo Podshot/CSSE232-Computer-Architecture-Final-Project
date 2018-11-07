@@ -32,23 +32,17 @@ module PCSPandMemoryBlock(
 	 reg [15:0] io_out_reg;
 	 
 	 always @ (ze_imm, MemWrite, io_in, MaryData, mem_out) begin
-		case (ze_imm)
-			255: begin
-				case (MemWrite)
-					1'b0: begin // IO Read - Working!
-						io_in_reg = io_in;
-					end
-					1'b1: begin // IO Write - Working!
-						io_out_reg = MaryData;
-						new_MemWrite = 1'b0;
-					end
-				endcase
+		if (ze_imm == 255) begin
+			if (MemWrite == 1'b0) begin
+				io_in_reg = io_in;
+			end else begin
+				io_out_reg = MaryData;
+				new_MemWrite = 1'b0;
 			end
-			default: begin
-				io_in_reg = mem_out;
-				new_MemWrite = MemWrite;
-			end
-		endcase
+		end else begin
+			io_in_reg = mem_out;
+			new_MemWrite = MemWrite;
+		end
 	 end
 	 
 	 assign mem_data_out = io_in_reg;
