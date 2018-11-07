@@ -1,0 +1,43 @@
+prep:
+	aput n //put n into mary
+	sput 42
+	rpop
+	bkra //back up return address
+	aput@ 2 //int m; m = 2;
+	bkac@ //back up shelley's initial value
+relprime_loop:
+	jfnc 6 //gcd
+	cequ 1 //if (gcd(n, m) == 1
+	jcmp@ 24 //relprime_end
+	spop //restore shelley's initial value
+	aadd 1 //m=m+1
+	bkac //back up shelley
+	swap //put a in front (prep args)
+gcd:
+	cequ 0 //if (a == 0)
+	jimm@ 2
+	swap //prep b for return
+	jret //return b;
+	jcmp@ -2
+	bkac //back up mary
+	swap //swap to b
+gcd_loop:
+	cequ 0 //if b == 0
+	jcmp@ 8 //break
+	cles@ //if b < a
+	jcmp@ 3 //jump past b=b-a to a=a-b (gcd_2)
+	asub@ //else b=b-a
+	jimm@ -5 //gcd_loop
+gcd_2
+	swap //switch to a
+	asub@ //a=a-b
+	swap //switch to b
+	jimm@ -9 //gcd_loop
+gcd_end:
+	spop //pop backup of mary back into mary
+	swap //prep return value
+	jret //return a
+relprime_end:
+	spop //put m into mary to prep for return
+	rpop //restore original return address
+	jret //return m, done
