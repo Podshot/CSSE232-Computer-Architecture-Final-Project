@@ -1,0 +1,8 @@
+CSSE232
+	Was never really taught Verilog
+	
+CSSE371
+	Had to do a databases assignment involving designing a database and writing queries for it in SQL. Databases is not a prereq for 371.
+	
+MA490
+	I followed the material until we got to Deutsch's Problem, then we started moving through each algorithm so quickly, and each had so many steps, and they all sort of blended together. It became difficult to follow, and I wasn't sure what was important so I couldn't take great notes, then when I went to study it later I couldn't piece together the algorithm based on what few notes I had.

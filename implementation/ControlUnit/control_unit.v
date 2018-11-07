@@ -281,17 +281,38 @@ module control_unit(
 			endcase
 			end
 		5'b00101: begin
-		case (current_state) //spop
-			2: begin
-				MemWrite = 1'b0; 
-				MemDst = 3'b110; 
-				max_state = 1; 
+		case (flagbit)
+			0: //spop
+				begin
+				case (current_state)
+					2: begin
+						MemWrite = 1'b0; 
+						MemDst = 3'b110; 
+						max_state = 1; 
+						end
+					3: begin
+						SPWrite = 1'b1; 
+						SPSrc = 2'b10; 
+						MaryWrite = 1'b1; 
+						MarySrc = 2'b00; 
+						end
+				endcase
 				end
-			3: begin
-				SPWrite = 1'b1; 
-				SPSrc = 2'b10; 
-				MaryWrite = 1'b1; 
-				MarySrc = 2'b00; 
+			1: //spop@
+				begin
+				case (current_state)
+					2: begin
+						MemWrite = 1'b0; 
+						MemDst = 3'b110; 
+						max_state = 1; 
+						end
+					3: begin
+						SPWrite = 1'b1; 
+						SPSrc = 2'b10; 
+						ShelleyWrite = 1'b1; 
+						ShelleySrc = 2'b00; 
+						end
+				endcase
 				end
 			endcase
 			end
