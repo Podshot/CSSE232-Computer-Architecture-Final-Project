@@ -18,11 +18,35 @@ module PCSPandMemoryBlock(
 	 input SPWrite,
 	 input InstWrite,
 	 input reset,
-	 output [15:0] mem_out,
+	 input [15:0] io_in,
+	 output [15:0] io_out,
+	 output [15:0] mem_data_out,
 	 output [15:0] Inst_out,
 	 output [15:0] pc_out,
 	 output [15:0] sp_out
 	 );
+	 
+	 wire [15:0] mem_out;
+	 reg [15:0] new_MemWrite;
+	 reg [15:0] io_in_reg;
+	 reg [15:0] io_out_reg;
+	 
+	 always @ (ze_imm, MemWrite, io_in, MaryData, mem_out) begin
+		if (ze_imm == 255) begin
+			if (MemWrite == 1'b0) begin
+				io_in_reg = io_in;
+			end else begin
+				io_out_reg = MaryData;
+				new_MemWrite = 1'b0;
+			end
+		end else begin
+			io_in_reg = mem_out;
+			new_MemWrite = MemWrite;
+		end
+	 end
+	 
+	 assign mem_data_out = io_in_reg;
+	 assign io_out = io_out_reg;
 	
 pc_block pc_block(
 		.clock(clock),
@@ -47,7 +71,7 @@ sp_block sp_block(
 
 memory_datapath memory_datapath(
 		.clock(clock),
-		.MemWrite(MemWrite),
+		.MemWrite(new_MemWrite),
 		.MemSrc(MemSrc),
 		.MemDst(MemDst),
 		.pc(pc_out),

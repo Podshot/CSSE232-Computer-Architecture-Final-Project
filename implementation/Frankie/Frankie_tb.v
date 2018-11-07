@@ -6,7 +6,9 @@ module Frankie_tb;
 	reg clock;
 	reg reset;
 	reg [15:0] io_in;
-	reg [15:0] io_out;
+	
+	// Outputs
+	wire [15:0] io_out;
 	
 	
 	
@@ -33,6 +35,7 @@ module Frankie_tb;
 
 		#100;
 		reset = 0;
+		io_in = 16;
 
 		/*
 		//test add
@@ -54,7 +57,6 @@ module Frankie_tb;
 		#40; //add mary and shelley
 		#40; //put aluout into mary; mary should be 12
 		*/
-		
 		
 		#4000;
 		/*
