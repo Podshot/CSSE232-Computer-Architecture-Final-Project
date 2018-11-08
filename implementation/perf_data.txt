@@ -1,0 +1,19 @@
+1. 60 bytes
+2. 61286 instructions
+3. 214440 cycles
+4. 3.4990 cpi
+5. 11.860 ns = 84.319 MHz
+6. 2.5433 ms
+7. :c
+8. Device utilization summary:
+---------------------------
+
+Selected Device : 3s500efg320-4 
+
+ Number of Slices:                     7104  out of   4656   152% (*) 
+ Number of Slice Flip Flops:           8372  out of   9312    89%  
+ Number of 4 input LUTs:               5356  out of   9312    57%  
+ Number of IOs:                          34
+ Number of bonded IOBs:                  18  out of    232     7%  
+    IOB Flip Flops:                      16
+ Number of GCLKs:                         1  out of     24     4%  

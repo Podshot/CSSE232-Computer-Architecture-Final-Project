@@ -1,0 +1,29 @@
+relprime: 1 time
+
+gcd: 10 times
+
+loop 1: 5
+
+loop 2: 2520+1680+1260+1008+840+720+630+560+504+458+2
+
+
+
+relprime: 	1
+gcd: 		10
+loop general: 10187
+loop 1: 	5
+loop 2: 	10182
+
+
+instructions per run:
+relprime: 4
+gcd: 15
+loop general: 3
+loop 1: 5
+loop 2: 3
+
+
+1*4 + 10*15 + 10187*3 + 5*5 + 10182*3
+
+
+61286
