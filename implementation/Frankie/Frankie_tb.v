@@ -35,7 +35,7 @@ module Frankie_tb;
 
 		#100;
 		reset = 0;
-		io_in = 16;
+		io_in = 16'b0001001110110000;
 
 		/*
 		//test add
