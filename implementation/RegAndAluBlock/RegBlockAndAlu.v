@@ -9,7 +9,7 @@ module RegBlockAndAlu(
 	input shelley_write,
 	input comp_write,
 	input ra_write,
-	input [1:0] mary_src,
+	input [2:0] mary_src,
 	input [1:0] shelley_src,
 	input ra_src, //note: comp only takes in aluout, so it needs no source control
 	input clock,
@@ -24,7 +24,8 @@ module RegBlockAndAlu(
 	output [15:0] zext_imm_output,
 	output [15:0] sext_imm_output,
 	output [15:0] sext_ls_imm_output,
-	input reset
+	input reset,
+	input in_kernel
 	);
 
 	//outputs of regblock
@@ -84,6 +85,11 @@ left_shift_2 leftshifter(
 	.in(sext_imm),
 	.out(leftshifter_out)
 	);
+	
+wire [15:0] comary_out;
+wire [15:0] coshelley_out;
+wire [15:0] cocomp_out;
+wire [15:0] cora_out;
 
 RegBlock RegBlock(
 	.memval(memval),
@@ -102,8 +108,26 @@ RegBlock RegBlock(
 	.shelley_out(shelley_reg_out),
 	.comp_out(comp_reg_out),
 	.ra_out(ra_reg_out),
-	.reset(reset)
+	.reset(reset),
+	.comary(comary_out),
+	.coshelley(coshelley_out),
+	.cocomp(cocomp_out),
+	.cora(cora_out)
 );
+
+RegBlock_backup cop(
+	.mary(mary_reg_out),
+	.shelley(shelley_reg_out),
+	.comp(comp_reg_out),
+	.ra(ra_reg_out),
+	.clock(clock),
+	.in_kernel(in_kernel),
+	.comary_out(comary_out),
+	.coshelley_out(coshelley_out),
+	.cocomp_out(cocomp_out),
+	.cora_out(cora_out),
+	.reset(reset)
+	);
 
 alu alu(
 	.mary(mary_out),

@@ -35,7 +35,19 @@ module Frankie_tb;
 
 		#100;
 		reset = 0;
-		io_in = 16'b0001001110110000;
+		#120;
+		io_in = 5040;
+		#1000;
+		io_in = 16'b0000000000000000;
+		
+		for(i=0;i<100;i=i+0)
+		begin
+			#40;
+			if (io_out != 0)
+			begin
+				$finish;
+			end
+		end
 
 		/*
 		//test add
@@ -58,7 +70,6 @@ module Frankie_tb;
 		#40; //put aluout into mary; mary should be 12
 		*/
 		
-		#4000;
 		/*
 		//test sub
 		//test write io

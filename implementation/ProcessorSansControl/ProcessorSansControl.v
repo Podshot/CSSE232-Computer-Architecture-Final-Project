@@ -5,7 +5,7 @@ module ProcessorSansControl(
 	input MemWrite,
 	input [1:0] MemSrc,
 	input [2:0] MemDst,
-	input [2:0] PCSrc,
+	input [3:0] PCSrc,
 	input [1:0] SPSrc,
 	input PCWrite,
 	input SPWrite,
@@ -15,7 +15,7 @@ module ProcessorSansControl(
 	input shelley_write,
 	input comp_write,
 	input ra_write,
-	input [1:0] mary_src,
+	input [2:0] mary_src,
 	input [1:0] shelley_src,
 	input ra_src,
 	input SrcA,
@@ -24,11 +24,14 @@ module ProcessorSansControl(
 	input [15:0] io_in,
 	output [15:0] io_out,
 	output overflow_output,
-	output [15:0] instruction
+	output [15:0] instruction,
+	input in_kernel,
+	output [15:0] pc_out
    );
 
 	wire [15:0] mem_out;
 	wire [15:0] pc;
+	assign pc_out = pc;
 	wire [15:0] sp;
 	wire [15:0] comp;
 	wire [15:0] ra;
@@ -61,7 +64,8 @@ PCSPandMemoryBlock PCSPandMemoryBlock(
 	.mem_data_out(mem_out),
 	.Inst_out(instruction),
 	.pc_out(pc),
-	.sp_out(sp)
+	.sp_out(sp),
+	.in_kernel(in_kernel)
 	);
 	
 	reg [15:0] inst_reg;
@@ -95,7 +99,8 @@ RegBlockAndAlu RegBlockAndAlu(
 	.zext_imm_output(zext_imm),
 	.sext_imm_output(sext_imm),
 	.sext_ls_imm_output(sext_ls_imm),
-	.reset(reset)
+	.reset(reset),
+	.in_kernel(in_kernel)
 	);
 	
 	assign overflow_output = overflow;

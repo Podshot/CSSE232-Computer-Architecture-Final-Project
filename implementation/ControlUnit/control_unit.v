@@ -15,6 +15,8 @@
 module control_unit(
     input [4:0] OPCODE,
     input flagbit,
+	 input [15:0] io_in,
+	 input [15:0] pc,
     output reg MemRead,
     output reg MemWrite,
     output reg [1:0] MemSrc,
@@ -26,10 +28,10 @@ module control_unit(
     output reg PCWrite,
     output reg SPWrite,
 	 output reg InstWrite, 
-    output reg [1:0] MarySrc,
+    output reg [2:0] MarySrc,
     output reg [1:0] ShelleySrc,
     output reg RASrc,
-    output reg [2:0] PCSrc,
+    output reg [3:0] PCSrc,
     output reg [1:0] SPSrc,
     output reg RegDst,
 	 output reg [2:0] MemDst,
@@ -37,6 +39,7 @@ module control_unit(
     output reg SrcA,
     output reg [1:0] SrcB,
     output reg [3:0] ALUOP,
+	 output reg in_kernel,
    
 	 input wire CLK,
 	 input wire Reset 
@@ -46,6 +49,13 @@ module control_unit(
 	 reg [3:0] current_state;
 	 reg [3:0] next_state;
 	 reg max_state; 
+	 
+	 reg [31:0] total_inst;
+	 reg [31:0] total_cycle;
+	 
+	 initial begin
+		in_kernel = 0;
+	 end
 
 //////////////////////////////
 //    State Declarations    //
@@ -61,17 +71,32 @@ module control_unit(
 	
 	//Cycle 4:
 	parameter Fourth = 3; 
-
 	
+	//Cycle kernel:
+	parameter Fifth = 4;
+
 	
 //////////////////////////////
 //    Register Calculation  //
 //////////////////////////////	
 	always@ (posedge CLK) begin
 		if(Reset)
+		begin
 			current_state = Fetch; 
-		else 
-			current_state = next_state; 
+			total_inst = 0;
+			total_cycle = -1;
+		end
+		else if (io_in != 16'b0000000000000000 && in_kernel == 0) //interrupts
+			current_state = Fifth;
+		else
+			current_state = next_state;
+			
+		total_cycle = total_cycle + 1;
+		if (current_state == Fetch)
+		begin
+			total_inst = total_inst + 1;
+		end
+			
 	end 
 	 
 //////////////////////////////
@@ -110,9 +135,17 @@ module control_unit(
 	case(current_state) 
 		
 		Fetch:
+			if (pc == 255) //return from kernel
 			begin
 				PCWrite = 1'b1; 
-				PCSrc = 3'b000;
+				PCSrc = 4'b1001;
+				MaryWrite = 1'b1;
+				MarySrc = 3'b100;
+			end
+			else
+			begin
+				PCWrite = 1'b1; 
+				PCSrc = 4'b0000;
 				MemWrite = 1'b0; 
 				MemDst = 3'b000;
 				InstWrite = 1'b0; 
@@ -145,6 +178,13 @@ module control_unit(
 			end 
 	endcase 
 	
+	if (current_state == Fifth)
+	begin
+		PCSrc = 4'b1000;
+		PCWrite = 1;
+		in_kernel = 1;
+	end
+	
 	
 //Separate the control stuff from the next state 
 
@@ -163,7 +203,7 @@ module control_unit(
 			0: //aput
 			begin
 				MaryWrite = 1'b1; 
-				MarySrc = 2'b11;
+				MarySrc = 3'b011;
 			end
 			1: //aput@
 			begin
@@ -193,7 +233,7 @@ module control_unit(
 					end
 					3: begin
 						MaryWrite = 1'b1;  
-						MarySrc = 2'b01; 
+						MarySrc = 3'b001; 
 					end
 				endcase
 				end
@@ -208,7 +248,7 @@ module control_unit(
 					end
 					3: begin
 						MaryWrite = 1'b1;  
-						MarySrc = 2'b01; 
+						MarySrc = 3'b001; 
 					end
 				endcase
 				end
@@ -227,7 +267,7 @@ module control_unit(
 						end
 					3: begin
 						MaryWrite = 1'b1;  
-						MarySrc = 2'b01; 
+						MarySrc = 3'b001; 
 						end
 				endcase
 			end
@@ -242,7 +282,7 @@ module control_unit(
 					end
 					3: begin
 						MaryWrite = 1'b1;  
-						MarySrc = 2'b01; 
+						MarySrc = 3'b001; 
 					end
 				endcase
 			end
@@ -260,7 +300,7 @@ module control_unit(
 						end
 					3: begin
 						MaryWrite = 1'b1;
-						MarySrc = 2'b00;
+						MarySrc = 3'b000;
 						end
 				endcase
 				end
@@ -294,7 +334,7 @@ module control_unit(
 						SPWrite = 1'b1; 
 						SPSrc = 2'b10; 
 						MaryWrite = 1'b1; 
-						MarySrc = 2'b00; 
+						MarySrc = 3'b000; 
 						end
 				endcase
 				end
@@ -336,12 +376,12 @@ module control_unit(
 			0: //jimm
 				begin
 				PCWrite = 1'b1;
-				PCSrc = 3'b010; 
+				PCSrc = 4'b0010; 
 				end
 			1: //jimm@
 				begin
 				PCWrite = 1'b1;
-				PCSrc = 3'b001; 
+				PCSrc = 4'b0001; 
 				end
 			endcase
 			end
@@ -350,12 +390,12 @@ module control_unit(
 			0: //jacc
 				begin
 				PCWrite = 1'b1;
-				PCSrc = 3'b100;
+				PCSrc = 4'b0100;
 				end
 			1: //jacc@
 				begin
 				PCWrite = 1'b1;
-				PCSrc = 3'b101;
+				PCSrc = 4'b0101;
 				end
 			endcase
 		end
@@ -364,19 +404,19 @@ module control_unit(
 			0: //jcmp
 				begin
 				PCWrite = 1'b1;
-				PCSrc = 3'b110; 
+				PCSrc = 4'b0110; 
 				end
 			1: //jcmp@
 				begin
 				PCWrite = 1'b1;
-				PCSrc = 3'b111; 
+				PCSrc = 4'b0111; 
 				end
 			endcase
 		end
 		5'b01010: //jret
 			begin
 			PCWrite = 1'b1;
-			PCSrc = 3'b011; 
+			PCSrc = 4'b0011; 
 			end
 		5'b01011: begin
 		case (flagbit)
@@ -385,14 +425,14 @@ module control_unit(
 				RAWrite = 1'b1; 
 				RASrc = 1'b1; 
 				PCWrite = 1'b1;
-				PCSrc = 3'b010;
+				PCSrc = 4'b0010;
 				end
 			1: //jfnc@
 				begin
 				RAWrite = 1'b1; 
 				RASrc = 1'b1; 
 				PCWrite = 1'b1;
-				PCSrc = 3'b001; 
+				PCSrc = 4'b0001; 
 				end
 			endcase
 		end
@@ -498,7 +538,7 @@ module control_unit(
 					end
 				3: begin
 					MaryWrite = 1'b1; 
-					MarySrc = 2'b01; 
+					MarySrc = 3'b001; 
 					end
 				endcase
 			end
@@ -512,7 +552,7 @@ module control_unit(
 					end
 				3: begin
 					MaryWrite = 1'b1; 
-					MarySrc = 2'b01; 
+					MarySrc = 3'b001; 
 					end
 				endcase
 			end
@@ -530,7 +570,7 @@ module control_unit(
 					end
 				3: begin
 					MaryWrite = 1'b1; 
-					MarySrc = 2'b01; 
+					MarySrc = 3'b001; 
 					end
 				endcase
 			end
@@ -544,7 +584,7 @@ module control_unit(
 					end
 				3: begin
 					MaryWrite = 1'b1; 
-					MarySrc = 2'b01; 
+					MarySrc = 3'b001; 
 					end
 				endcase
 			end
@@ -562,7 +602,7 @@ module control_unit(
 					end
 				3: begin
 					MaryWrite = 1'b1; 
-					MarySrc = 2'b01;
+					MarySrc = 3'b001;
 					end
 				endcase
 			end
@@ -576,7 +616,7 @@ module control_unit(
 					end
 				3: begin
 					MaryWrite = 1'b1; 
-					MarySrc = 2'b01;
+					MarySrc = 3'b001;
 					end
 				endcase
 			end
@@ -594,7 +634,7 @@ module control_unit(
 					end
 				3: begin
 					MaryWrite = 1'b1; 
-					MarySrc = 2'b01; 
+					MarySrc = 3'b001; 
 					end
 				endcase
 			end
@@ -608,7 +648,7 @@ module control_unit(
 					end
 				3: begin
 					MaryWrite = 1'b1; 
-					MarySrc = 2'b01; 
+					MarySrc = 3'b001; 
 					end
 				endcase
 			end
@@ -625,7 +665,7 @@ module control_unit(
 					end
 				3: begin
 					MaryWrite = 1'b1; 
-					MarySrc = 2'b00; 
+					MarySrc = 3'b000; 
 					end
 				endcase
 			end
@@ -638,7 +678,7 @@ module control_unit(
 					end
 				3: begin
 					MaryWrite = 1'b1; 
-					MarySrc = 2'b00; 
+					MarySrc = 3'b000; 
 					end
 				endcase
 			end
@@ -650,13 +690,13 @@ module control_unit(
 				begin
 				MemWrite = 1'b1;
 				MemDst = 3'b001;
-				MarySrc = 2'b00;
+				MarySrc = 3'b000;
 				end
 			1: //stor@
 				begin
 				MemWrite = 1'b1;
 				MemDst = 3'b011;
-				MarySrc = 2'b00;
+				MarySrc = 3'b000;
 				end
 			endcase
 		end
@@ -702,12 +742,12 @@ module control_unit(
 				end
 			3: begin
 				MaryWrite = 1'b1; 
-				MarySrc = 2'b01; 
+				MarySrc = 3'b001; 
 				end
 			endcase
 		*/
 		MaryWrite = 1'b1;
-		MarySrc = 2'b10;
+		MarySrc = 3'b010;
 		ShelleyWrite = 1'b1;
 		ShelleySrc = 2'b10;
 		end
@@ -745,6 +785,10 @@ module control_unit(
 			next_state = Fetch; 
 			//$display("In Four, the next state is %d", next_state); 
 		end 
+		
+		if(current_state == Fifth) begin
+			next_state = Fetch;
+		end
 	end
 		
 endmodule

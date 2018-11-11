@@ -1,5 +1,4 @@
 prep:
-	aput n //put n into mary
 	aput@ 2 //int m; m = 2;
 	bkac@ //back up shelley's initial value
 relprime_loop:
@@ -38,3 +37,7 @@ relprime_end:
 	
 	
 	jimm -1 //infinite loop
+	
+	
+kernel:
+	load 255 //load input into mary

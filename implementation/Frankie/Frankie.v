@@ -12,7 +12,7 @@ module Frankie(
 	wire MemWrite;
 	wire [1:0] MemSrc;
 	wire [2:0] MemDst;
-	wire [2:0] PCSrc;
+	wire [3:0] PCSrc;
 	wire [1:0] SPSrc;
 	wire PCWrite;
 	wire SPWrite;
@@ -21,12 +21,14 @@ module Frankie(
 	wire shelley_write;
 	wire comp_write;
 	wire ra_write;
-	wire [1:0] mary_src;
+	wire [2:0] mary_src;
 	wire [1:0] shelley_src;
 	wire ra_src;
 	wire SrcA;
 	wire [1:0] SrcB;
 	wire [3:0] AluOp;
+	wire in_kernel;
+	wire [15:0] pc_out;
 
 ProcessorSansControl processor(
 		.clock(clock),
@@ -52,7 +54,9 @@ ProcessorSansControl processor(
 		.io_in(io_in),
 		.io_out(io_out),
 		.overflow_output(overflow),
-		.instruction(inst_out)
+		.instruction(inst_out),
+		.in_kernel(in_kernel),
+		.pc_out(pc_out)
 	);
 	
 	reg [15:0] inst;
@@ -65,6 +69,8 @@ ProcessorSansControl processor(
 control_unit control(
 		.OPCODE(inst[14:10]),
 		.flagbit(inst[15]),
+		.io_in(io_in),
+		.pc(pc_out),
 		.MemRead(MemRead),
 		.MemWrite(MemWrite),
 		.MemSrc(MemSrc),
@@ -87,6 +93,7 @@ control_unit control(
 		.SrcA(SrcA),
 		.SrcB(SrcB),
 		.ALUOP(AluOp),
+		.in_kernel(in_kernel),
 		.CLK(clock),
 		.Reset(reset)
 	);

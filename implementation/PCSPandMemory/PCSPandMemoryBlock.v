@@ -12,7 +12,7 @@ module PCSPandMemoryBlock(
 	 input [15:0] ShelleyData,
 	 input [15:0] RAData,
 	 input [15:0] CompData,
-	 input [2:0] PCSrc,
+	 input [3:0] PCSrc,
 	 input [1:0] SPSrc,
 	 input PCWrite,
 	 input SPWrite,
@@ -23,11 +23,12 @@ module PCSPandMemoryBlock(
 	 output [15:0] mem_data_out,
 	 output [15:0] Inst_out,
 	 output [15:0] pc_out,
-	 output [15:0] sp_out
+	 output [15:0] sp_out,
+	 input in_kernel
 	 );
 	 
 	 wire [15:0] mem_out;
-	 reg [15:0] new_MemWrite;
+	 reg new_MemWrite;
 	 reg [15:0] io_in_reg;
 	 reg [15:0] io_out_reg;
 	 
@@ -35,7 +36,7 @@ module PCSPandMemoryBlock(
 		if (ze_imm == 255) begin
 			if (MemWrite == 1'b0) begin
 				io_in_reg = io_in;
-			end else begin
+			end else if (Inst_out[14:10] == 5'b10100) begin
 				io_out_reg = MaryData;
 				new_MemWrite = 1'b0;
 			end
@@ -58,7 +59,8 @@ pc_block pc_block(
 		.comp(CompData),
 		.pcWrite(PCWrite),
 		.reset(reset),
-		.pcOut(pc_out)
+		.pcOut(pc_out),
+		.in_kernel(in_kernel)
 	);
 	
 sp_block sp_block(
