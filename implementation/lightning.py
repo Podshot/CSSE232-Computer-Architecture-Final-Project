@@ -159,8 +159,16 @@ def parse_file(f: str, export_debug_mapping=False):
 
     machine_code, parsed_asm_code = parse_instructions(asm_code, labels_and_addresses)
 
+    if len(machine_code) > 253:
+        print(f"[Error]: Program \"{name}\" has more that 253 instructions and can't be compiled!")
+        return
 
-    fp = open(f"{name}.out", 'w')
+    machine_code.extend(["1111111111111111"] * (253 - len(machine_code)))
+    machine_code += ["0100111111111100"] # kernel
+    machine_code.extend(["1111111111111111"] * 256) # stack
+
+
+    fp = open(f"{name}.mem", 'w')
     fp.writelines((f"{l}\n" for l in machine_code))
     fp.close()
 
