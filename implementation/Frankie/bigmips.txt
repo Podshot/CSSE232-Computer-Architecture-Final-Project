@@ -1,0 +1,14 @@
+aput 66
+aput 73
+aput 71
+aput 77
+aput 73
+aput 80
+aput 83
+aput 69
+aput 78
+aput 69
+aput 82
+aput 71
+aput 89
+stor 255
